@@ -9,4 +9,5 @@ public class BinanceHistoricalData {
     @Value("${binance.secretKey}")
     private String secretKey;
 
+
 }

@@ -10,6 +10,5 @@ public class TradingSignalAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TradingSignalAppApplication.class, args);
 		BinanceAvailablePairs availablePairs = new BinanceAvailablePairs();
-		System.out.println(availablePairs.TradingPairs());
 	}
 }
