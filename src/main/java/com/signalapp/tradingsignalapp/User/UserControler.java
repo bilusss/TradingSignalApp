@@ -29,8 +29,22 @@ public class UserControler {
     }
 
     // post
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("")
+    void create(@RequestBody User user){
+        userRepository.create(user);
+    }
 
     // put
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    void update(@RequestBody User user, @PathVariable Integer id){
+        userRepository.update(user, id);
+    }
 
     // delete
+    @DeleteMapping("/{id}")
+    void delete(@PathVariable Integer id){
+        userRepository.delete(id);
+    }
 }

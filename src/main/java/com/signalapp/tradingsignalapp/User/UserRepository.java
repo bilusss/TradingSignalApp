@@ -40,28 +40,51 @@ public class UserRepository {
     // The query returns ResultSet, but it needs to know how to change it to user
     // That's why the mapper is used - simply instructions how to build user
     public List<User> getAll() {
-        String sql = "select * from \"User\"";
+        String sql = "select * from \"User\" ORDER BY id ASC";
         return jdbcTemplate.query(sql, new UserMapper());
     }
 
     //Optional returns Object or None
     public Optional<User> getById(Integer id) {
-        String sql = String.format("select * from \"User\" where id = %s", id);
+        String sql = "SELECT * FROM \"User\" WHERE id = ?";
         try {
             User user = jdbcTemplate.queryForObject(sql, new UserMapper(), id);
             return Optional.ofNullable(user);
         } catch (Exception e) {
-            // If no result is found catches EmptyResultDataAccessException and returns None
+            // If no result is found, return None
             return Optional.empty();
         }
 
+
     }
     public void create(User user) {
-        // TODO
+        String sql = "INSERT INTO \"User\"(username, hash, credit) VALUES (?, ?, ?)";
+        try {
+            var created = jdbcTemplate.update( sql, user.getUsername(),user.getHash(),user.getCredit() );
+
+        } catch (Exception e) {
+            // Implement error handling to fronend
+
+        }
     }
-    public void update(User user) {
-        // TODO
-    }public void delete(User user) {
-        // TODO
+    public void update(User user, Integer id) {
+        String sql = "UPDATE \"User\" SET username = ?, hash = ?, credit = ? WHERE id = ?";
+        try {
+            var updated = jdbcTemplate.update( sql, user.getUsername(),user.getHash(),user.getCredit(),id);
+
+        } catch (Exception e) {
+            // Implement error handling to fronend
+
+        }
+    }public void delete(Integer id) {
+        // Maby add some validation so all records in db won't be affected after deletion
+        String sql = "DELETE FROM \"User\" WHERE id = ?";
+        try {
+            var deleted = jdbcTemplate.update(sql, id);
+
+        } catch (Exception e) {
+            // Implement error handling to fronend
+
+        }
     }
 }
