@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ApiControllers {
+public class PagesController {
 
     @GetMapping(value = "/")
     public String getPage(){

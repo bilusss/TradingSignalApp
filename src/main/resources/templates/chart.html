@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chart</title>
+</head>
+<body>
+<h1>Chart</h1>
+<p th:text="'Pair: ' + ${pair}"></p>
+<script>
+    //  const container = document.getElementById('container');
+    //  const chart = createChart(container, chartOptions);
+    //
+    //  const series = chart.addCandlestickSeries({
+    //      upColor: '#26a69a',
+    //      downColor: '#ef5350',
+    //      borderVisible: false,
+    //      wickUpColor: '#26a69a',
+    //      wickDownColor: '#ef5350',
+    //  });
+    //
+    //  const datafeed = new Datafeed();
+    //
+    //  series.setData(datafeed.getBars(200));
+    //
+    //  chart.timeScale().subscribeVisibleLogicalRangeChange(logicalRange => {
+    //      if (logicalRange.from < 10) {
+    //          const numberBarsToLoad = 50 - logicalRange.from;
+    //          const data = datafeed.getBars(numberBarsToLoad);
+    //          setTimeout(() => {
+    //              series.setData(data);
+    //          }, 250);
+    //      }
+    // });250
+</script>
+</body>
+</html>
