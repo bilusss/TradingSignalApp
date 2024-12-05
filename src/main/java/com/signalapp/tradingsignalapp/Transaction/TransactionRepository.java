@@ -21,9 +21,8 @@ public class TransactionRepository {
     public static class TransactionMapper implements RowMapper<Transaction> {
         @Override
         public Transaction mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Transaction transaction = new Transaction();
+            Transaction transaction = new Transaction(1,1,2,1.0,2.0,1.0,"BUY","A");
             //TODO
-
             return transaction;
         }
     }
