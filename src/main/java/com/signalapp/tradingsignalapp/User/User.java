@@ -47,7 +47,7 @@ public class User {
     }
     public boolean checkPassword(String password){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(6);
-        return encoder.matches(this.hash, password);
+        return encoder.matches(password, this.hash);
     }
     public String getHash() {
         return this.hash;

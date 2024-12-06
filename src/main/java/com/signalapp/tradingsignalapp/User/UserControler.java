@@ -28,6 +28,15 @@ public class UserControler {
         return user.get();
     }
 
+    @GetMapping("/{username}")
+    User getByUsername(@PathVariable String username){
+        Optional <User> user = userRepository.getByUsername(username);
+        if (user.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return user.get();
+    }
+
     // post
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
