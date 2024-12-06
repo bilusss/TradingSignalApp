@@ -54,8 +54,16 @@ public class UserRepository {
             // If no result is found, return None
             return Optional.empty();
         }
-
-
+    }
+    public Optional<User> getByUsername(String username) {
+        String sql = "SELECT * FROM \"User\" WHERE username = ?";
+        try {
+            User user = jdbcTemplate.queryForObject(sql, new UserMapper(), username);
+            return Optional.ofNullable(user);
+        } catch (Exception e) {
+            // If no result is found, return None
+            return Optional.empty();
+        }
     }
     public void create(User user) {
         String sql = "INSERT INTO \"User\"(username, hash, credit) VALUES (?, ?, ?)";

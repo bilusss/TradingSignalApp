@@ -1,25 +1,24 @@
 package com.signalapp.tradingsignalapp.Controller;
 
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class PagesController {
 
     @GetMapping(value = "/")
     public String getPage(){
-        return "this will be main page";
+        return "redirect:/register";
     }
 
-    @GetMapping(value = "/register")
-    public String getRegisterPage(){
-        return "this will be register page";
-    }
-
-    @GetMapping(value = "/login")
-    public String getLoginPage(){
-        return "this will be login page";
+    @GetMapping(value = "/home")
+    public String getHomePage(){
+        return "home";
     }
 
 }
+
+
