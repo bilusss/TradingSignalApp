@@ -10,11 +10,6 @@ import java.util.ArrayList;
 @Configuration
 public class BinanceAvailablePairs {
 
-    @Value("${binance.apiKey}")
-    private String apiKey;
-    @Value("${binance.secretKey}")
-    private String secretKey;
-
     private static final String url = "https://api.binance.com/api/v3/exchangeInfo";
 
     @Bean
