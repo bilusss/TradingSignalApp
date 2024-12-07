@@ -116,4 +116,7 @@ public class BinanceExchangeInfo {
                     "quoteAsset:" + quoteAsset + "}";
         }
     }
+    public Map<String, SymbolInfo> getSymbolInfoMap() {
+        return symbolMap;
+    }
 }
