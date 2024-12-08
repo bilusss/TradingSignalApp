@@ -19,7 +19,9 @@ public class BinanceHistoricalData {
     }
 
     public List<List<String>> getHistoricalData(String symbol, String interval) {
-        String url = "https://api.binance.com/api/v3/uiKlines?symbol=" + symbol + "&interval=" + interval;
+        String limit = "500";//By default, it's set to 500, but we will be using 1000
+        // as we need more data if user move chart more to the left (to the past :D)
+        String url = "https://api.binance.com/api/v3/uiKlines?symbol=" + symbol + "&interval=" + interval + "&limit=" + limit;
         List<List<String>> symbolData = new ArrayList<>();
 
         try{

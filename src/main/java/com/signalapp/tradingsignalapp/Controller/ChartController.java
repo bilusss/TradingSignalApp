@@ -22,7 +22,7 @@ public class ChartController {
     }
 
     @GetMapping("/chart/{symbol}")
-    public String getChart(@PathVariable String symbol, Model model) {
+    public String getChart(@PathVariable String symbol, Model model) { // Model allows us to pass data into html file
         if (!AvailablePairs.contains(symbol)) {
             model.addAttribute("error", "Trading pair " + symbol + " is not available.");
             return "error";
