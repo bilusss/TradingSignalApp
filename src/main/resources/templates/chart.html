@@ -1,11 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Chart</title>
+    <title>Trading Chart</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
-<h1>Chart</h1>
-<p th:text="'Pair: ' + ${pair}"></p>
+<h1>Trading Chart</h1>
+<h2 th:text="'Pair: ' + ${symbol}"></h2>
+<div id="chart" style="width: 800px; height: 400px;"></div>
+<script th:inline="javascript">
+    // https://github.com/tradingview/lightweight-charts
+    // https://tradingview.github.io/lightweight-charts/tutorials
 
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+        width: 800,
+        height: 400,
+        layout: {
+            background: { color: "#222" },
+            textColor: "#DDDDDD",
+        },
+        grid: {
+            vertLines: { color: "#444" },
+            horzLines: { color: "#444" },
+        },
+        rightPriceScale: {
+            borderVisible: false,
+        },
+        timeScale: {
+            rightOffset: 12,
+            barSpacing: 3,
+            timeVisible: true,
+            secondsVisible: false,
+            lockVisibleTimeRangeOnResize: true,
+            borderVisible: false,
+        },
+    });
+
+    // Candle configurate
+    const candleSeries = chart.addCandlestickSeries({
+        upColor: '#4caf50',// Bullish candles (up :D)
+        borderUpColor: '#4caf50',
+        wickUpColor: '#4caf50',
+        downColor: '#f44336', // Bearish candles (down :D)
+        borderDownColor: '#f44336',
+        wickDownColor: '#f44336'
+    });
+
+    // Adding historical data to chart
+    const historicalData = /*[[${historicalData}]]*/ [];
+    const formattedData = historicalData.map(entry => ({
+        time: Math.floor(entry[0] / 1000), // Convert time from milliseconds to seconds
+        open: parseFloat(entry[1]),
+        high: parseFloat(entry[2]),
+        low: parseFloat(entry[3]),
+        close: parseFloat(entry[4])
+    }));
+    candleSeries.setData(formattedData); // Setting data to candlestick chart
+
+    // WebSocket - Live data added to chart
+    // Code here :)
+</script>
 </body>
 </html>
