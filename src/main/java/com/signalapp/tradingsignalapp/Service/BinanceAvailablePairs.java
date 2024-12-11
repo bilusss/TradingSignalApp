@@ -1,46 +1,37 @@
 package com.signalapp.tradingsignalapp.Service;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Configuration
 public class BinanceAvailablePairs {
 
-    @Value("${binance.apiKey}")
-    private String apiKey;
-    @Value("${binance.secretKey}")
-    private String secretKey;
+    private final BinanceExchangeInfo binanceExchangeInfo;
 
-    private static final String url = "https://api.binance.com/api/v3/exchangeInfo";
+    @Autowired
+    public BinanceAvailablePairs(BinanceExchangeInfo binanceExchangeInfo) {
+        this.binanceExchangeInfo = binanceExchangeInfo;
+    }
 
     @Bean
-    public static ArrayList<String> TradingPairs(){
-        ArrayList<String> AvailablePairs = new ArrayList<String>();
-        RestTemplate restTemplate = new RestTemplate();
+    public ArrayList<String> tradingPairs() throws IOException {
+        ArrayList<String> availablePairs = new ArrayList<>();
 
-        try {
-            String response = restTemplate.getForObject(url, String.class);
+        // Pobierz dane z BinanceExchangeInfo
+        binanceExchangeInfo.fetchExchangeInfo();
 
-            JsonNode rootNode = com.fasterxml.jackson.databind.json.JsonMapper.builder()
-                    .build()
-                    .readTree(response);
+        Map<String, BinanceExchangeInfo.SymbolInfo> symbolMap = binanceExchangeInfo.getSymbolInfoMap();
 
-            JsonNode symbolsNode = rootNode.path("symbols");
-            for (JsonNode symbolNode : symbolsNode) {
-                String symbol = symbolNode.path("symbol").asText();
-                String status = symbolNode.path("status").asText();
-
-                if ("TRADING".equals(status)) {
-                    AvailablePairs.add(symbol);
-                }
+        for (BinanceExchangeInfo.SymbolInfo symbolInfo : symbolMap.values()) {
+            if ("TRADING".equals(symbolInfo.getStatus())) {
+                availablePairs.add(symbolInfo.getSymbol());
             }
-        } catch (Exception err){
-            System.err.println("Binance error: " + err.getMessage());
         }
-        return AvailablePairs;
+        return availablePairs;
     }
 }
