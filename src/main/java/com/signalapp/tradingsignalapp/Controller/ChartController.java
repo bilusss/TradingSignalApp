@@ -26,7 +26,7 @@ public class ChartController {
     public String getChart(@PathVariable String symbol, @PathVariable(required = false) String interval, Model model) {
         // Model allows us to pass data into html file
         if (!AvailablePairs.contains(symbol)) {
-            model.addAttribute("error", "Trading pair " + symbol + " is not available.");
+            model.addAttribute("error", "Trading pair " + symbol + " is not available");
             return "error";
         }
         // Available interval: 1s 1m 3m 5m 15m 30m 1h 2h 4h 6h 8h 12h 1d 3d 1w 1M
