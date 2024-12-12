@@ -9,18 +9,18 @@ import java.util.List;
 
 @Service
 public class BinancePriceChange {
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
-    private String priceChangePercent = new String;
+    private RestTemplate restTemplate;
+    private ObjectMapper objectMapper;
+    private String priceChangePercent = new String();
 
     public BinancePriceChange(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
-    public List<String> getPriceChange(String symbol) {
+    public String getPriceChange(String symbol) {
 
         String url = "https://api.binance.com/api/v3/ticker/24hr?symbol=" + symbol;
-        List<String> symbolPriceChangeStatistics = new ArrayList<>();
+        String symbolPriceChangeStatistics = new String();
 
         try{
             String response = restTemplate.getForObject(url, String.class);
@@ -28,8 +28,7 @@ public class BinancePriceChange {
             // If needed any more information from symbolNode then add below
             // (remember to add them also in other places below based on code)
             // added those we need for now
-            String priceChangePercent = rootNode.get("priceChangePercent").asText();
-            symbolPriceChangeStatistics.add(priceChangePercent);
+            symbolPriceChangeStatistics = rootNode.get("priceChangePercent").asText();
         }catch (Exception e) {
             System.err.println("Error getting 24hr Ticker Price Change Statistics: " + e.getMessage());
         }
