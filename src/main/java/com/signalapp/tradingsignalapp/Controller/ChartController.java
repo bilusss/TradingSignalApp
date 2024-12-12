@@ -3,7 +3,6 @@ package com.signalapp.tradingsignalapp.Controller;
 import com.signalapp.tradingsignalapp.Service.BinanceHistoricalData;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,7 @@ public class ChartController {
         this.binanceHistoricalData = binanceHistoricalData;
     }
 
-    @GetMapping({"/chart/{symbol}", "/chart/{symbol}/{interval}"})
+    @GetMapping({"/chart/{symbol}", "/chart/{symbol}/", "/chart/{symbol}/{interval}", "/chart/{symbol}/{interval}/"})
     public String getChart(@PathVariable String symbol, @PathVariable(required = false) String interval, Model model) {
         // Model allows us to pass data into html file
         if (!AvailablePairs.contains(symbol)) {
