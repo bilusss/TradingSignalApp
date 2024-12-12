@@ -2,6 +2,7 @@ package com.signalapp.tradingsignalapp.Controller;
 
 import com.signalapp.tradingsignalapp.Service.BinanceHistoricalData;
 
+import com.signalapp.tradingsignalapp.Service.BinancePriceChange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,11 +15,13 @@ import java.util.List;
 public class ChartController {
     private final List<String> AvailablePairs;
     private final BinanceHistoricalData binanceHistoricalData;
+    private final BinancePriceChange binancePriceChange;
 
     @Autowired
-    public ChartController(List<String> AvailablePairs, BinanceHistoricalData binanceHistoricalData) {
+    public ChartController(List<String> AvailablePairs, BinanceHistoricalData binanceHistoricalData, BinancePriceChange binancePriceChange) {
         this.AvailablePairs = AvailablePairs;
         this.binanceHistoricalData = binanceHistoricalData;
+        this.binancePriceChange = binancePriceChange;
     }
 
     @GetMapping({"/chart/{symbol}", "/chart/{symbol}/", "/chart/{symbol}/{interval}", "/chart/{symbol}/{interval}/"})
@@ -32,6 +35,7 @@ public class ChartController {
         String tempInterval = (interval == null) ? "1s" : interval; // Default interval 1s
 
         var historicalData = binanceHistoricalData.getHistoricalData(symbol, tempInterval);
+        var priceChange = binancePriceChange.getPriceChange(symbol);
 
         if (historicalData.isEmpty()) {
             model.addAttribute("error", "Failed to load historical data for symbol: " + symbol);
@@ -41,6 +45,7 @@ public class ChartController {
         model.addAttribute("pair", symbol);
         model.addAttribute("historicalData", historicalData);
         model.addAttribute("interval", tempInterval);
+        model.addAttribute("priceChange", priceChange);
         return "chart";
     }
 }
