@@ -42,10 +42,22 @@ public class ChartController {
             return "error";
         }
 
+        String symbolText = symbol + " on " + interval;
+        String priceChangeText = "";
+        if (priceChange.startsWith("-")){
+            priceChangeText = "(" + priceChange + "%)";
+        }else{
+            priceChangeText = "(+" + priceChange + "%)";
+        }
+        String priceChangeClass = priceChange.startsWith("-") ? "red" :
+                ("0.000".equals(priceChange) || "0".equals(priceChange) ? "gray" : "green");
+
+        model.addAttribute("symbolText", symbolText);
+        model.addAttribute("priceChangeClass", priceChangeClass);
+        model.addAttribute("priceChangeText", priceChangeText);
         model.addAttribute("pair", symbol);
         model.addAttribute("historicalData", historicalData);
         model.addAttribute("interval", tempInterval);
-        model.addAttribute("priceChange", priceChange);
         return "chart";
     }
 }

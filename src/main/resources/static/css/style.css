@@ -23,3 +23,13 @@ h1, h2 {
     justify-content: center;
     align-items: center;
 }
+
+.red {
+    color: red;
+}
+.gray {
+    color: gray;
+}
+.green {
+    color: green;
+}

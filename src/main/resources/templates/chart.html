@@ -39,7 +39,12 @@
         </form>
     </div>
 </nav>
-<h1 style="margin-top: 30px; margin-bottom: 30px; text-align: center; " th:text="${symbol} +' on ' + ${interval} + ' ' + ${priceChange}"></h1>
+<div style="display: flex; justify-content: center; align-items: center; margin-top: 30px; margin-bottom: 30px;">
+    <span th:text="${symbolText}" style="font-size: 24px;"></span>
+    <span th:text="${priceChangeText}" th:class="${priceChangeClass}" style="font-size: 24px; margin-left: 5px;"></span>
+</div>
+
+
 <div id="chart" style="width: 800px; height: 400px;"></div>
 <script th:inline="javascript">
     // https://github.com/tradingview/lightweight-charts
