@@ -63,6 +63,7 @@
 
         if (value > 0) {
             tickerValueElement.classList.add('green');
+            tickerValueElement.textContent = `(+${value}%)`;
         } else if (value == 0 || value == '0.00') {
             tickerValueElement.classList.add('gray');
         } else {
