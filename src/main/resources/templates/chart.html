@@ -39,10 +39,54 @@
         </form>
     </div>
 </nav>
-<div style="display: flex; justify-content: center; align-items: center; margin-top: 30px; margin-bottom: 30px;">
-    <span th:text="${symbolText}" style="font-size: 24px;"></span>
-    <span th:text="${priceChangeText}" th:class="${priceChangeClass}" style="font-size: 24px; margin-left: 5px;"></span>
-</div>
+
+
+<div id="Ticker" th:text="${pair} + ' on ' + ${interval} + ': (0%)'" class="gray">PAIR on INTERVAL: (0%)</div>
+
+<script>
+    // Funkcja aktualizująca wyświetlany Ticker
+    function updateTickerDisplay(value) {
+        const tickerElement = document.getElementById('Ticker');
+        tickerElement.textContent = `${pair} on ${interval}: (${value}%)`;
+
+        // Usunięcie istniejących klas koloru
+        tickerElement.classList.remove('green', 'gray', 'red');
+
+        // Dodanie odpowiedniej klasy koloru
+        if (value > 0) {
+            tickerElement.classList.add('green'); // Zielony dla dodatnich wartości
+        } else if (value == 0 || value === "0.00") {
+            tickerElement.classList.add('gray'); // Szary dla zera
+        } else {
+            tickerElement.classList.add('red'); // Czerwony dla wartości ujemnych
+        }
+    }
+
+    // Pobranie symbolu pary z Thymeleaf
+    const pair = /*[[${pair}]]*/ 'ETHUSDT';
+    const interval = /*[[${interval}]]*/ '1s';
+
+    // WebSocket do Binance dla Ticker
+    const socket = new WebSocket('wss://stream.binance.com:9443/ws/' + pair.toLowerCase() + '@ticker');
+
+    socket.onmessage = event => {
+        const message = JSON.parse(event.data);
+        const priceChangePercent = parseFloat(message.P).toFixed(2);
+
+        // Aktualizacja wyświetlania Ticker
+        updateTickerDisplay(priceChangePercent);
+    };
+
+    socket.onerror = error => {
+        console.error("Błąd WebSocket:", error);
+        document.getElementById('Ticker').textContent = "Błąd połączenia!";
+    };
+
+    socket.onclose = () => {
+        console.warn("Połączenie WebSocket zostało zamknięte.");
+        document.getElementById('Ticker').textContent = "Połączenie zamknięte.";
+    };
+</script>
 
 
 <div id="chart" style="width: 800px; height: 400px;"></div>

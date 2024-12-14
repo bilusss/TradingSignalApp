@@ -24,6 +24,17 @@ h1, h2 {
     align-items: center;
 }
 
+#Ticker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    transition: color 0.5s ease-in-out; /* Płynne przejście koloru */
+}
+
 .red {
     color: red;
 }
