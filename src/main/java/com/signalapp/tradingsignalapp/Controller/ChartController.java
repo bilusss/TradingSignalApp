@@ -21,7 +21,7 @@ public class ChartController {
         this.binanceHistoricalData = binanceHistoricalData;
     }
 
-    @GetMapping({"/chart/{symbol}", "/chart/{symbol}/", "/chart/{symbol}/{tempInterval}", "/chart/{symbol}/{interval}/"})
+    @GetMapping({"/chart/{symbol}", "/chart/{symbol}/", "/chart/{symbol}/{tempInterval}", "/chart/{symbol}/{tempInterval}/"})
     public String getChart(@PathVariable String symbol, @PathVariable(required = false) String tempInterval, Model model) {
         // Model allows us to pass data into html file
         if (!AvailablePairs.contains(symbol)) {
