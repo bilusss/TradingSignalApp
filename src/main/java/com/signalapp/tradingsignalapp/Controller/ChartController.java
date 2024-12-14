@@ -24,17 +24,17 @@ public class ChartController {
         this.binancePriceChange = binancePriceChange;
     }
 
-    @GetMapping({"/chart/{symbol}", "/chart/{symbol}/", "/chart/{symbol}/{interval}", "/chart/{symbol}/{interval}/"})
-    public String getChart(@PathVariable String symbol, @PathVariable(required = false) String interval, Model model) {
+    @GetMapping({"/chart/{symbol}", "/chart/{symbol}/", "/chart/{symbol}/{tempInterval}", "/chart/{symbol}/{interval}/"})
+    public String getChart(@PathVariable String symbol, @PathVariable(required = false) String tempInterval, Model model) {
         // Model allows us to pass data into html file
         if (!AvailablePairs.contains(symbol)) {
             model.addAttribute("error", "Trading pair " + symbol + " is not available");
             return "error";
         }
         // Available interval: 1s 1m 3m 5m 15m 30m 1h 2h 4h 6h 8h 12h 1d 3d 1w 1M
-        String tempInterval = (interval == null) ? "1s" : interval; // Default interval 1s
+        String interval = (tempInterval == null) ? "1s" : tempInterval; // Default interval 1s
 
-        var historicalData = binanceHistoricalData.getHistoricalData(symbol, tempInterval);
+        var historicalData = binanceHistoricalData.getHistoricalData(symbol, interval);
         var priceChange = binancePriceChange.getPriceChange(symbol);
 
         if (historicalData.isEmpty()) {
@@ -57,7 +57,7 @@ public class ChartController {
         model.addAttribute("priceChangeText", priceChangeText);
         model.addAttribute("pair", symbol);
         model.addAttribute("historicalData", historicalData);
-        model.addAttribute("interval", tempInterval);
+        model.addAttribute("interval", interval);
         return "chart";
     }
 }
