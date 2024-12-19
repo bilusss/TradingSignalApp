@@ -28,6 +28,10 @@
             <div>
               <button type="submit" class="btn btn-primary w-100 ">Login</button>
             </div>
+            <div th:if="${error}" style="color: red">
+              <p th:text="${error}"></p>
+            </div>
+
           </form>
     </div>
     <div class="col"></div>
