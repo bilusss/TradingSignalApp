@@ -2,7 +2,9 @@ package com.signalapp.tradingsignalapp.Controller;
 
 import com.signalapp.tradingsignalapp.User.User;
 import com.signalapp.tradingsignalapp.User.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,17 +26,23 @@ public class LoginController {
     }
 
     @PostMapping(value = "/login")
-    public String handleLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
-        Optional<User> user = userRepository.getByUsername(username);
-        if (user.isEmpty()) {
-            // TODO return login with info
-            return "redirect:/login";
+    public String handleLogin(@RequestParam("username") String username,
+                              @RequestParam("password") String password,
+                              HttpSession session, Model model) {
+        Optional<User> loginUser = userRepository.getByUsername(username);
+
+        if (loginUser.isEmpty()) {
+            model.addAttribute("error", "User not found");
+            return "login";
         }
-        if(user.get().checkPassword(password)){
+
+        User user = loginUser.get();
+        if(user.checkPassword(password)){
+            session.setAttribute("userId", user.getId());
             return "redirect:/home";
         }else{
-            // TODO return login with info
-            return "redirect:/login";
+            model.addAttribute("error", "Invalid password");
+            return "login";
         }
     }
 
