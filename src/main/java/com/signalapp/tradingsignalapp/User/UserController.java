@@ -9,11 +9,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserControler {
+public class UserController {
     private final UserRepository userRepository;
 
     // It's the best practise, using new Repo may cause performance issues
-    public UserControler(UserRepository userRepository) {this.userRepository = userRepository;}
+    public UserController(UserRepository userRepository) {this.userRepository = userRepository;}
     @GetMapping("")
     List<User> getAll(){
         return userRepository.getAll();
