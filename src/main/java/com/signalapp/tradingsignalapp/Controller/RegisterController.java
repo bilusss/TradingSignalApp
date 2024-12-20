@@ -1,7 +1,7 @@
 package com.signalapp.tradingsignalapp.Controller;
 
 import com.signalapp.tradingsignalapp.User.User;
-import com.signalapp.tradingsignalapp.User.UserControler;
+import com.signalapp.tradingsignalapp.User.UserController;
 import com.signalapp.tradingsignalapp.User.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
