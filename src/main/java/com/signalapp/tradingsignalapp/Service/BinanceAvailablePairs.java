@@ -22,9 +22,6 @@ public class BinanceAvailablePairs {
     public ArrayList<String> tradingPairs() throws IOException {
         ArrayList<String> availablePairs = new ArrayList<>();
 
-        // Pobierz dane z BinanceExchangeInfo
-        binanceExchangeInfo.fetchExchangeInfo();
-
         Map<String, BinanceExchangeInfo.SymbolInfo> symbolMap = binanceExchangeInfo.getSymbolInfoMap();
 
         for (BinanceExchangeInfo.SymbolInfo symbolInfo : symbolMap.values()) {
