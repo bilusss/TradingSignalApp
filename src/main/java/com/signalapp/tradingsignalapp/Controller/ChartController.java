@@ -1,5 +1,6 @@
 package com.signalapp.tradingsignalapp.Controller;
 
+import com.signalapp.tradingsignalapp.Service.BinanceExchangeInfo;
 import com.signalapp.tradingsignalapp.Service.BinanceHistoricalData;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +15,21 @@ import java.util.List;
 public class ChartController {
     private final List<String> AvailablePairs;
     private final BinanceHistoricalData binanceHistoricalData;
+    private final BinanceExchangeInfo binanceExchangeInfo;
+
 
     @Autowired
-    public ChartController(List<String> AvailablePairs, BinanceHistoricalData binanceHistoricalData) {
+    public ChartController(List<String> AvailablePairs, BinanceHistoricalData binanceHistoricalData, BinanceExchangeInfo binanceExchangeInfo) {
         this.AvailablePairs = AvailablePairs;
         this.binanceHistoricalData = binanceHistoricalData;
+        this.binanceExchangeInfo = binanceExchangeInfo;
     }
 
     @GetMapping({"/chart/{symbol}", "/chart/{symbol}/", "/chart/{symbol}/{tempInterval}", "/chart/{symbol}/{tempInterval}/"})
     public String getChart(@PathVariable String symbol, @PathVariable(required = false) String tempInterval, Model model) {
         // Model allows us to pass data into html file
+
+        // Checking if symbol is on Binance trading list
         if (!AvailablePairs.contains(symbol)) {
             model.addAttribute("error", "Trading pair " + symbol + " is not available");
             return "error";
@@ -38,9 +44,16 @@ public class ChartController {
             return "error";
         }
 
+        String tick;
+        BinanceExchangeInfo.SymbolInfo symbolInfo = binanceExchangeInfo.getSymbolInfo(symbol);
+        tick = symbolInfo.getTickSize();
+
+
+        // Passing attributes to html file
         model.addAttribute("pair", symbol);
         model.addAttribute("historicalData", historicalData);
         model.addAttribute("interval", interval);
+        model.addAttribute("tick", tick);
         return "chart";
     }
 }
