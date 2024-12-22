@@ -103,8 +103,17 @@
 
     // Candle configurate
     function getPriceFormat(){
-        return { type: 'price', precision: quotePrecision, minMove: tick };
+        return { type: 'price', precision: calculatePrecision(tick), minMove: parseFloat(tick) };
     }
+    function calculatePrecision(tickSize) {
+        if (!tickSize.includes('.')) {
+            return 0;
+        }
+        const decimalPart = tickSize.split('.')[1] || "";
+        const trimmedDecimalPart = decimalPart.replace(/0+$/, ''); // Ignoring 0 at the end "0.01000000"
+        return trimmedDecimalPart.length;
+    }
+    console.log(getPriceFormat())
     const candleSeries = chart.addCandlestickSeries({
         upColor: '#4caf50',// Bullish candles (up :D)
         borderUpColor: '#4caf50',
