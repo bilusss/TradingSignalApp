@@ -75,7 +75,8 @@ public class BinanceExchangeInfo {
                         }
                     }
                 }
-                SymbolInfo symbolInfo = new SymbolInfo(symbol, status, baseAsset, quoteAsset, tickSize);
+                String quotePrecision = symbolNode.get("quotePrecision").asText();
+                SymbolInfo symbolInfo = new SymbolInfo(symbol, status, baseAsset, quoteAsset, tickSize, quotePrecision);
                 symbolMap.put(symbol, symbolInfo);
             }
         }
@@ -95,13 +96,15 @@ public class BinanceExchangeInfo {
         private final String baseAsset;
         private final String quoteAsset;
         private final String tickSize;
+        private final String quotePrecision;
 
-        public SymbolInfo(String symbol, String status, String baseAsset, String quoteAsset, String tickSize) {
+        public SymbolInfo(String symbol, String status, String baseAsset, String quoteAsset, String tickSize, String quotePrecision) {
             this.symbol = symbol;
             this.status = status;
             this.baseAsset = baseAsset;
             this.quoteAsset = quoteAsset;
             this.tickSize = tickSize;
+            this.quotePrecision = quotePrecision;
         }
 
         public String getSymbol() {
@@ -112,12 +115,15 @@ public class BinanceExchangeInfo {
         }
         public String getBaseAsset() {
             return baseAsset;
-        } // USE THIS AS A ID TO TRANSACTION
+        } // USE THIS AS AN ID TO TRANSACTION
         public String getQuoteAsset() {
             return quoteAsset;
-        } // USE THIS AS A ID TO TRANSACTION
+        } // USE THIS AS AN ID TO TRANSACTION
         public String getTickSize() {
             return tickSize;
+        } // USE THIS TO GET MINIMAL PRICE MOVE
+        public String getQuotePrecision() {
+            return quotePrecision;
         } // USE THIS TO GET PRECISION
 
         @Override
@@ -127,7 +133,8 @@ public class BinanceExchangeInfo {
                     "status:" + status + " ," +
                     "baseAsset:" + baseAsset + " ," +
                     "quoteAsset:" + quoteAsset + " ," +
-                    "tickSize:" + tickSize + "}";
+                    "tickSize:" + tickSize + " ," +
+                    "quotePrecision:" + quotePrecision + "}";
         }
     }
     public Map<String, SymbolInfo> getSymbolInfoMap() {

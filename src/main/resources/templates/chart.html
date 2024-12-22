@@ -52,6 +52,9 @@
 <script th:inline="javascript">
     const pair = /*[[${pair}]]*/ '';
     const interval = /*[[${interval}]]*/ '';
+    const tick = /*[[${tick}]]*/ '';
+    const quotePrecision = /*[[${quotePrecision}]]*/ '';
+
     // Setting start parameters
     const pairIntervalElement = document.getElementById('pair-interval');
     const tickerValueElement = document.getElementById('ticker-value');
@@ -99,13 +102,17 @@
     });
 
     // Candle configurate
+    function getPriceFormat(){
+        return { type: 'price', precision: quotePrecision, minMove: tick };
+    }
     const candleSeries = chart.addCandlestickSeries({
         upColor: '#4caf50',// Bullish candles (up :D)
         borderUpColor: '#4caf50',
         wickUpColor: '#4caf50',
         downColor: '#f44336', // Bearish candles (down :D)
         borderDownColor: '#f44336',
-        wickDownColor: '#f44336'
+        wickDownColor: '#f44336',
+        priceFormat: getPriceFormat(),
     });
 
     // Adding historical data to chart

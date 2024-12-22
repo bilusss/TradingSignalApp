@@ -47,13 +47,14 @@ public class ChartController {
         String tick;
         BinanceExchangeInfo.SymbolInfo symbolInfo = binanceExchangeInfo.getSymbolInfo(symbol);
         tick = symbolInfo.getTickSize();
-
+        String quotePrecision = symbolInfo.getQuotePrecision();
 
         // Passing attributes to html file
         model.addAttribute("pair", symbol);
         model.addAttribute("historicalData", historicalData);
         model.addAttribute("interval", interval);
         model.addAttribute("tick", tick);
+        model.addAttribute("quotePrecision", quotePrecision);
         return "chart";
     }
 }
