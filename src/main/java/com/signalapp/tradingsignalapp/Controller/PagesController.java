@@ -15,9 +15,13 @@ public class PagesController {
     }
 
     @GetMapping(value = "/home")
-    public String getHomePage(){
-        return "home";
-    }
+    public String getHomePage(){return "home";}
+
+    @GetMapping(value = "/trade")
+    public String getTradePage() {return "trade";}
+
+    @GetMapping(value = "/char")
+    public String getChartPage() {return "chart_v2";}
 
 }
 
