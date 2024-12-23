@@ -3,10 +3,12 @@
 <head>
     <title>TradingSignal</title>
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&family=Montserrat:ital,wght@0,800;1,800&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #181a20;">
     <a style="padding-top:5px; padding-bottom:5px;" href="/home"><img src="/img/logo-navbar.png" width="65" height="50" alt="TradingSignalLogo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -41,46 +43,42 @@
     </div>
 
 </nav>
-<div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <h1 style="padding: 20px"> Time to earn some money, Username</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-2"></div>
-        <div class="col-md-auto">
-            <div class="card  bg-dark border-warning mb-3" style="max-width: 700px;border-width: 2px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="https://static.cdnlogo.com/logos/b/6/binance.svg" class="img-fluid rounded-start p-3" alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body text-warning">
-                            <h5 class="card-title">Bitcoin</h5>
-                            <p class="card-text">Bitcoin (BTC) is a cryptocurrency (a virtual currency) designed to act as money and a form of payment outside the control of any one person, group, or entity</p>
-                            <a href="#" class="btn btn-light">Start trading</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card  bg-dark border-warning mb-3" style="max-width: 700px;border-width: 2px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="https://static.cdnlogo.com/logos/b/6/binance.svg" class="img-fluid rounded-start p-3" alt="...">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body text-warning">
-                            <h5 class="card-title">Bitcoin</h5>
-                            <p class="card-text">Bitcoin (BTC) is a cryptocurrency (a virtual currency) designed to act as money and a form of payment outside the control of any one person, group, or entity</p>
-                            <a href="#" class="btn btn-light">Start trading</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-2"></div>
-    </div>
+<div class="mx-2 my-5" >
+    <h2 class="trade-heading">Start trading right now</h2>
+
+    <table class="table table-striped" style = "color:white;">
+        <thead>
+        <tr class="tr-title">
+            <th>Name</th>
+            <th>Symbol</th>
+            <th>Current Price</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <img src="https://cdn.jsdelivr.net/gh/vadimmalykhin/binance-icons/crypto/btc.svg" alt="Bitcoin" style="width: 20px; height: 20px; margin-right: 8px;">
+                BITCOIN
+            </td>
+            <td>BTC</td>
+            <td>91 185,00 €</td>
+            <td><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></td>
+        </tr>
+        <tr>
+            <td>
+                <img src="https://cdn.jsdelivr.net/gh/vadimmalykhin/binance-icons/crypto/eth.svg" alt="Ethereum" style="width: 20px; height: 20px; margin-right: 8px;">
+                ETHERUM
+            </td>
+            <td>ETH</td>
+            <td>3 143,35 €</td>
+            <td><a href="#" class="btn btn-outline-success btn-sm btn-block">Buy/sell</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
+
+
+
 </body>
 </html>

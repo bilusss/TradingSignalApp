@@ -11,18 +11,29 @@ body {
     font-style: normal;
     color:#38B261;
 }
-.title-heading-2 {
-    font-size: 2rem;
+.trade-heading{
+    /*font-size: 2rem;*/
     font-family: "Ubuntu", serif;
     font-weight: 700;
     font-style: normal;
-    /*color:#38B261;*/
+    color:#38B261;
 }
 .form-control:focus {
     border-color: #28a745;
     box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
 }
 
+.table {
+    color: #d4d4d4;
+
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+.table th{
+    border-top: none!important;
+}
 
 h1, h2 {
     color: #FFFFFF;
