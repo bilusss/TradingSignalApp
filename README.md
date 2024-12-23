@@ -34,6 +34,8 @@ API is being delivered by Binance Exchange.
 - Run the project throught IDE like Intellij
 
 
+- Enter the [localhost](http://localhost:8080/)
+
 ## Roadmap
 
 ✅ Make a README.md
