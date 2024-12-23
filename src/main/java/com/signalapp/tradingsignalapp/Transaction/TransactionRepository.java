@@ -21,12 +21,12 @@ public class TransactionRepository {
     public static class TransactionMapper implements RowMapper<Transaction> {
         @Override
         public Transaction mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Transaction transaction = new Transaction(1, "s", 1, "BTC", "USDT", 1.0, 100000.0, LocalDateTime.now(), 100000.0, "aa");
+            Transaction transaction = new Transaction(1, "s", 1, 1, 2, 1.0, 100000.0, LocalDateTime.now(), 100000.0, "aa");
             transaction.setId(rs.getInt("id"));
             transaction.setTitle(rs.getString("title"));
             transaction.setUserId(rs.getInt("userId"));
-            transaction.setCryptoIdBought(rs.getString("cryptoIdBought"));
-            transaction.setCryptoIdSold(rs.getString("cryptoIdSold"));
+            transaction.setCryptoIdBought(rs.getInt("cryptoIdBought"));
+            transaction.setCryptoIdSold(rs.getInt("cryptoIdSold"));
             transaction.setAmountBought(rs.getDouble("amountBought"));
             transaction.setAmountSold(rs.getDouble("amountSold"));
             transaction.setCompletedAt(rs.getTimestamp("completed_at").toLocalDateTime());

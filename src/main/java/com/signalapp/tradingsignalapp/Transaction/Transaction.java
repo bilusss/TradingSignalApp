@@ -6,15 +6,15 @@ public class Transaction {
     public Integer id;
     public String title;
     public Integer userId;
-    public String cryptoIdBought;
-    public String cryptoIdSold;
+    public Integer cryptoIdBought;
+    public Integer cryptoIdSold;
     public Double amountBought;
     public Double amountSold;
     public LocalDateTime completedAt;
     public Double price;
     public String description;
 
-    public Transaction( Integer id, String title, Integer userId, String cryptoIdBought, String cryptoIdSold, Double amountBought, Double amountSold, LocalDateTime completedAt, Double price, String description) {
+    public Transaction( Integer id, String title, Integer userId, Integer cryptoIdBought, Integer cryptoIdSold, Double amountBought, Double amountSold, LocalDateTime completedAt, Double price, String description) {
         this.id = id;
         this.title = title;
         this.userId = userId;
@@ -34,10 +34,10 @@ public class Transaction {
     public void setTitle(String title) { this.title = title; }
     public Integer getUserId() { return userId; }
     public void setUserId(Integer userId) { this.userId = userId; }
-    public String getCryptoIdBought() { return cryptoIdBought; }
-    public void setCryptoIdBought(String cryptoIdBought) { this.cryptoIdBought = cryptoIdBought; }
-    public String getCryptoIdSold() { return cryptoIdSold; }
-    public void setCryptoIdSold(String cryptoIdSold) { this.cryptoIdSold = cryptoIdSold; }
+    public Integer getCryptoIdBought() { return cryptoIdBought; }
+    public void setCryptoIdBought(Integer cryptoIdBought) { this.cryptoIdBought = cryptoIdBought; }
+    public Integer getCryptoIdSold() { return cryptoIdSold; }
+    public void setCryptoIdSold(Integer cryptoIdSold) { this.cryptoIdSold = cryptoIdSold; }
     public Double getAmountBought() { return amountBought; }
     public void setAmountBought(Double amountBought) { this.amountBought = amountBought; }
     public Double getAmountSold() { return amountSold; }
