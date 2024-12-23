@@ -29,7 +29,7 @@ public class TransactionRepository {
             transaction.setCryptoIdSold(rs.getString("cryptoIdSold"));
             transaction.setAmountBought(rs.getDouble("amountBought"));
             transaction.setAmountSold(rs.getDouble("amountSold"));
-            transaction.setCompleted_at(rs.getTimestamp("completed_at").toLocalDateTime());
+            transaction.setCompletedAt(rs.getTimestamp("completed_at").toLocalDateTime());
             transaction.setPrice(rs.getDouble("price"));
             transaction.setDescription(rs.getString("description"));
             return transaction;
@@ -63,7 +63,7 @@ public class TransactionRepository {
         try {
             var created = jdbcTemplate.update(sql,transaction.getId(), transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
-                    transaction.getAmountSold(), transaction.getCompleted_at(), transaction.getPrice(), transaction.getDescription());
+                    transaction.getAmountSold(), transaction.getCompletedAt(), transaction.getPrice(), transaction.getDescription());
         } catch (Exception e){
             // Implement error handling to frontend
         }
@@ -73,7 +73,7 @@ public class TransactionRepository {
         try {
             var updated = jdbcTemplate.update(sql,transaction.getId(), transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
-                    transaction.getAmountSold(), transaction.getCompleted_at(), transaction.getPrice(), transaction.getDescription());
+                    transaction.getAmountSold(), transaction.getCompletedAt(), transaction.getPrice(), transaction.getDescription());
         } catch (Exception e){
             // Implement error handling to frontend
         }
