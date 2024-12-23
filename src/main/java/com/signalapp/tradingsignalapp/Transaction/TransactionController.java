@@ -1,6 +1,5 @@
 package com.signalapp.tradingsignalapp.Transaction;
 
-import com.signalapp.tradingsignalapp.User.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
