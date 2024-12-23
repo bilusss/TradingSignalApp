@@ -20,8 +20,17 @@ public class PagesController {
     @GetMapping(value = "/trade")
     public String getTradePage() {return "trade";}
 
-    @GetMapping(value = "/char")
+    @GetMapping(value = "/chart")
     public String getChartPage() {return "chart_v2";}
+
+    @GetMapping(value = "/transactions")
+    public String getTransactionsPage() {return "transactions";}
+
+    @GetMapping(value = "/balance")
+    public String getBalancePage() {return "balance";}
+
+    @GetMapping(value = "/wallet")
+    public String getWalletPage() {return "wallet";}
 
 }
 
