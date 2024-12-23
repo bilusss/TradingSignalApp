@@ -27,6 +27,11 @@ body {
     color: #d4d4d4;
 
 }
+.buy-container{
+    margin: 5px;
+    background-color: #0B0E11;
+    border-radius: 15px;
+}
 
 .table th, .table td {
     vertical-align: middle;
