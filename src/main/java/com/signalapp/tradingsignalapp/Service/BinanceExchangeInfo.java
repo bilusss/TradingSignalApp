@@ -13,11 +13,10 @@ import java.util.Map;
 
 @Service
 public class BinanceExchangeInfo {
-    //No need to use keys as we use testnet (90% sure :D)
     @Value("${binance.exchangeInfo.url}")
     private String URL_BINANCE_EXCHANGE_INFO;
 
-    private long lastFetchTime;
+    private double lastFetchTime;
     private Map<String, SymbolInfo> symbolMap;
 
     private static final long DURATION_IN_MILLIS = 5*60*1000; // 5 minutes in millis
@@ -42,9 +41,9 @@ public class BinanceExchangeInfo {
     }
 
     public void fetchExchangeInfo() throws IOException {
-        long currentTime = System.currentTimeMillis();
+        double currentTime = System.currentTimeMillis();
 
-        if (currentTime - lastFetchTime < DURATION_IN_MILLIS && !symbolMap.isEmpty()) {//No need to fetch
+        if (currentTime - lastFetchTime < DURATION_IN_MILLIS && !symbolMap.isEmpty()) {
             System.out.println("Using cached exchange info");
             return;
         }
@@ -66,10 +65,23 @@ public class BinanceExchangeInfo {
                 String status = symbolNode.get("status").asText();
                 String baseAsset = symbolNode.get("baseAsset").asText();
                 String quoteAsset = symbolNode.get("quoteAsset").asText();
-                SymbolInfo symbolInfo = new SymbolInfo(symbol, status, baseAsset, quoteAsset);
+                JsonNode filtersNode = symbolNode.get("filters");
+                String tickSize = null;
+                if (filtersNode != null) {
+                    for (JsonNode filterNode : filtersNode) {
+                        if (filterNode.get("filterType").asText().equals("PRICE_FILTER")) {
+                            tickSize = filterNode.get("tickSize").asText();
+                            break;
+                        }
+                    }
+                }
+                String quotePrecision = symbolNode.get("quotePrecision").asText();
+                SymbolInfo symbolInfo = new SymbolInfo(symbol, status, baseAsset, quoteAsset, tickSize, quotePrecision);
                 symbolMap.put(symbol, symbolInfo);
             }
         }
+        double inTime = (System.currentTimeMillis() - currentTime)/1000;
+        System.out.println("Fetched in " + inTime + "s");
         lastFetchTime = currentTime;
     }
 
@@ -83,29 +95,36 @@ public class BinanceExchangeInfo {
         private final String status;
         private final String baseAsset;
         private final String quoteAsset;
+        private final String tickSize;
+        private final String quotePrecision;
 
-        public SymbolInfo(String symbol, String status, String baseAsset, String quoteAsset) {
+        public SymbolInfo(String symbol, String status, String baseAsset, String quoteAsset, String tickSize, String quotePrecision) {
             this.symbol = symbol;
             this.status = status;
             this.baseAsset = baseAsset;
             this.quoteAsset = quoteAsset;
+            this.tickSize = tickSize;
+            this.quotePrecision = quotePrecision;
         }
 
         public String getSymbol() {
             return symbol;
         }
-
         public String getStatus() {
             return status;
         }
-
         public String getBaseAsset() {
             return baseAsset;
-        }
-
+        } // USE THIS AS AN ID TO TRANSACTION
         public String getQuoteAsset() {
             return quoteAsset;
-        }
+        } // USE THIS AS AN ID TO TRANSACTION
+        public String getTickSize() {
+            return tickSize;
+        } // USE THIS TO GET MINIMAL PRICE MOVE
+        public String getQuotePrecision() {
+            return quotePrecision;
+        } // USE THIS TO GET PRECISION
 
         @Override
         public String toString() {
@@ -113,7 +132,9 @@ public class BinanceExchangeInfo {
                     "symbol:" + symbol + " ," +
                     "status:" + status + " ," +
                     "baseAsset:" + baseAsset + " ," +
-                    "quoteAsset:" + quoteAsset + "}";
+                    "quoteAsset:" + quoteAsset + " ," +
+                    "tickSize:" + tickSize + " ," +
+                    "quotePrecision:" + quotePrecision + "}";
         }
     }
     public Map<String, SymbolInfo> getSymbolInfoMap() {

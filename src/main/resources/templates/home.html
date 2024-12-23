@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>TradingSignal</title>
+  <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #181a20">
   <a style="padding-top:5px; padding-bottom:5px;" href="/home"><img src="/img/logo-navbar.png" width="65" height="50" alt="TradingSignalLogo"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -14,16 +16,19 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0" >
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Vault</a>
+        <a class="nav-link" href="/trade">Trade<span class="sr-only"></span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Charts?</a>
+        <a class="nav-link" href="/transactions">Transactions</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Transactions</a>
+        <a class="nav-link" href="/balance">Balance</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/wallet">Wallet</a>
       </li>
 
     </ul>
@@ -36,7 +41,28 @@
       </div>
     </form>
   </div>
-
 </nav>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class = "container">
+        <h1 class="title-heading py-4"> Your future <br> begins here</h1>
+      </div>
+      <div class="container">
+        <form class="row g-3">
+          <div class="col-7">
+            <input type="email" class="form-control" id="newsletterEmail" placeholder="Email">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-outline-success"> Join us</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
 </body>
 </html>

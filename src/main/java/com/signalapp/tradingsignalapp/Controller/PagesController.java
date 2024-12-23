@@ -3,8 +3,6 @@ package com.signalapp.tradingsignalapp.Controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class PagesController {
@@ -15,9 +13,22 @@ public class PagesController {
     }
 
     @GetMapping(value = "/home")
-    public String getHomePage(){
-        return "home";
-    }
+    public String getHomePage(){return "home";}
+
+    @GetMapping(value = "/trade")
+    public String getTradePage() {return "trade";}
+
+    @GetMapping(value = "/trade/chart")
+    public String getChartPage() {return "chart";}
+
+    @GetMapping(value = "/transactions")
+    public String getTransactionsPage() {return "transactions";}
+
+    @GetMapping(value = "/balance")
+    public String getBalancePage() {return "balance";}
+
+    @GetMapping(value = "/wallet")
+    public String getWalletPage() {return "wallet";}
 
 }
 
