@@ -1,5 +1,7 @@
 package com.signalapp.tradingsignalapp.Controller;
 
+import com.signalapp.tradingsignalapp.Service.BinanceAvailablePairs;
+import com.signalapp.tradingsignalapp.Service.BinanceCurrencyID;
 import com.signalapp.tradingsignalapp.Service.BinanceExchangeInfo;
 import com.signalapp.tradingsignalapp.Service.BinanceHistoricalData;
 
@@ -13,14 +15,16 @@ import java.util.List;
 
 @Controller
 public class ChartController {
-    private final List<String> AvailablePairs;
+    private final List<String> availablePairs;
+    private final List<String> currencyIDs;
     private final BinanceHistoricalData binanceHistoricalData;
     private final BinanceExchangeInfo binanceExchangeInfo;
 
 
     @Autowired
-    public ChartController(List<String> AvailablePairs, BinanceHistoricalData binanceHistoricalData, BinanceExchangeInfo binanceExchangeInfo) {
-        this.AvailablePairs = AvailablePairs;
+    public ChartController(BinanceAvailablePairs binanceAvailablePairs, BinanceCurrencyID binanceCurrencyID, BinanceHistoricalData binanceHistoricalData, BinanceExchangeInfo binanceExchangeInfo) {
+        this.availablePairs = binanceAvailablePairs.availablePairs();
+        this.currencyIDs = binanceCurrencyID.currencyIDs();
         this.binanceHistoricalData = binanceHistoricalData;
         this.binanceExchangeInfo = binanceExchangeInfo;
     }
@@ -30,7 +34,7 @@ public class ChartController {
         // Model allows us to pass data into html file
 
         // Checking if symbol is on Binance trading list
-        if (!AvailablePairs.contains(symbol)) {
+        if (!availablePairs.contains(symbol)) {
             model.addAttribute("error", "Trading pair " + symbol + " is not available");
             return "error";
         }
@@ -55,6 +59,8 @@ public class ChartController {
         model.addAttribute("interval", interval);
         model.addAttribute("tick", tick);
         model.addAttribute("quotePrecision", quotePrecision);
+        model.addAttribute("currencyIds", currencyIDs);
+        model.addAttribute("availablePairs", availablePairs);
         return "chart";
     }
 }
