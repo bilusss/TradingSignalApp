@@ -1,7 +1,6 @@
 package com.signalapp.tradingsignalapp.Controller;
 
 import com.signalapp.tradingsignalapp.Service.BinanceAvailablePairs;
-import com.signalapp.tradingsignalapp.Service.BinanceCurrencyID;
 import com.signalapp.tradingsignalapp.Service.BinanceExchangeInfo;
 import com.signalapp.tradingsignalapp.Service.BinanceHistoricalData;
 
@@ -16,15 +15,13 @@ import java.util.List;
 @Controller
 public class ChartController {
     private final List<String> availablePairs;
-    private final List<String> currencyIDs;
     private final BinanceHistoricalData binanceHistoricalData;
     private final BinanceExchangeInfo binanceExchangeInfo;
 
 
     @Autowired
-    public ChartController(BinanceAvailablePairs binanceAvailablePairs, BinanceCurrencyID binanceCurrencyID, BinanceHistoricalData binanceHistoricalData, BinanceExchangeInfo binanceExchangeInfo) {
+    public ChartController(BinanceAvailablePairs binanceAvailablePairs, BinanceHistoricalData binanceHistoricalData, BinanceExchangeInfo binanceExchangeInfo) {
         this.availablePairs = binanceAvailablePairs.availablePairs();
-        this.currencyIDs = binanceCurrencyID.currencyIDs();
         this.binanceHistoricalData = binanceHistoricalData;
         this.binanceExchangeInfo = binanceExchangeInfo;
     }
@@ -59,7 +56,6 @@ public class ChartController {
         model.addAttribute("interval", interval);
         model.addAttribute("tick", tick);
         model.addAttribute("quotePrecision", quotePrecision);
-        model.addAttribute("currencyIds", currencyIDs);
         model.addAttribute("availablePairs", availablePairs);
         return "chart";
     }

@@ -115,10 +115,10 @@ public class BinanceExchangeInfo {
         }
         public String getBaseAsset() {
             return baseAsset;
-        } // USE THIS AS AN ID TO TRANSACTION
+        }
         public String getQuoteAsset() {
             return quoteAsset;
-        } // USE THIS AS AN ID TO TRANSACTION
+        }
         public String getTickSize() {
             return tickSize;
         } // USE THIS TO GET MINIMAL PRICE MOVE
