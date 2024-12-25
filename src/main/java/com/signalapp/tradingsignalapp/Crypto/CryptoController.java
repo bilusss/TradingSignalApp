@@ -5,51 +5,48 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/crypto")
 public class CryptoController {
     private final CryptoRepository cryptoRepository;
 
-    public CryptoController(CryptoRepository CryptoRepository) {this.cryptoRepository = CryptoRepository;}
+    public CryptoController(CryptoRepository cryptoRepository) {
+        this.cryptoRepository = cryptoRepository;
+    }
+
     @GetMapping("")
-    List<Crypto> getAll(){
+    public List<Crypto.CurrencyDetails> getAll() {
         return cryptoRepository.getAll();
     }
 
     @GetMapping("/{id}")
-    Crypto getById(@PathVariable Integer id){
-        Optional <Crypto> crypto = cryptoRepository.getById(id);
-        if (crypto.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return crypto.get();
+    public Crypto.CurrencyDetails getById(@PathVariable Integer id) {
+        return cryptoRepository.getById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/{symbol}")
-    Crypto getBySymbol(@PathVariable String symbol){
-        Optional <Crypto> crypto = cryptoRepository.getBySymbol(symbol);
-        if (crypto.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return crypto.get();
+    @GetMapping("/symbol/{symbol}")
+    public Crypto.CurrencyDetails getBySymbol(@PathVariable String symbol) {
+        return cryptoRepository.getBySymbol(symbol)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    void create(@RequestBody Crypto crypto){
-        cryptoRepository.create(crypto);
+    void create(@RequestBody Crypto.CurrencyDetails cryptoDetails) {
+        cryptoRepository.create(cryptoDetails);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    void update(@RequestBody Crypto crypto, @PathVariable Integer id){
-        cryptoRepository.update(crypto, id);
+    void update(@RequestBody Crypto.CurrencyDetails cryptoDetails, @PathVariable Integer id) {
+        cryptoRepository.updateById(id, cryptoDetails);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Integer id){
-        cryptoRepository.delete(id);
+    void delete(@PathVariable Integer id) {
+        cryptoRepository.deleteById(id);
     }
 }

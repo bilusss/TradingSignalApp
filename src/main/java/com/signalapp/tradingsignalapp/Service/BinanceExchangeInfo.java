@@ -3,7 +3,7 @@ package com.signalapp.tradingsignalapp.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+@Component
 public class BinanceExchangeInfo {
     @Value("${binance.exchangeInfo.url}")
     private String URL_BINANCE_EXCHANGE_INFO;
@@ -115,10 +115,10 @@ public class BinanceExchangeInfo {
         }
         public String getBaseAsset() {
             return baseAsset;
-        } // USE THIS AS AN ID TO TRANSACTION
+        }
         public String getQuoteAsset() {
             return quoteAsset;
-        } // USE THIS AS AN ID TO TRANSACTION
+        }
         public String getTickSize() {
             return tickSize;
         } // USE THIS TO GET MINIMAL PRICE MOVE
