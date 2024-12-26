@@ -1,7 +1,7 @@
 package com.signalapp.tradingsignalapp.Crypto;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,96 +11,77 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+// So basically I wanted to move the db management away from Controllers
+// It would be too much code there, so Repository manages the SELECTS etc
 @Repository
 public class CryptoRepository {
+
     public static final Logger log = LoggerFactory.getLogger(CryptoRepository.class);
     private final JdbcTemplate jdbcTemplate;
-    private final Crypto crypto;
 
-    public static class CryptoDetailsMapper implements RowMapper<Crypto.CurrencyDetails> {
+    public static class CryptoMapper implements RowMapper<Crypto> {
         @Override
-        public Crypto.CurrencyDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
-            String symbol = rs.getString("symbol");
-            String name = rs.getString("name");
-            String description = rs.getString("description");
-            String logoUrl = rs.getString("logoUrl");
-
-            return new Crypto(null).new CurrencyDetails(symbol, name, description, logoUrl);
+        public Crypto mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Crypto crypto = new Crypto();
+            crypto.setId(rs.getInt("id"));
+            crypto.setName(rs.getString("name"));
+            crypto.setSymbol(rs.getString("symbol"));
+            crypto.setDescription(rs.getString("description"));
+            crypto.setLogoUrl(rs.getString("logoUrl"));
+            return crypto;
         }
     }
 
-    public CryptoRepository(JdbcTemplate jdbcTemplate, Crypto crypto) {
+
+    public CryptoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.crypto = crypto;
-        initializeDatabase();
     }
 
-    public List<Crypto.CurrencyDetails> getAll() {
-        String sql = "SELECT * FROM \"Crypto\" ORDER BY id ASC";
-        return jdbcTemplate.query(sql, new CryptoDetailsMapper());
+    public List<Crypto> getAll() {
+        String sql = "select * from \"Crypto\" ORDER BY id ASC";
+        return jdbcTemplate.query(sql, new CryptoMapper());
     }
-    public Optional<Crypto.CurrencyDetails> getBySymbol(String symbol) {
-        String sql = "SELECT * FROM \"Crypto\" WHERE symbol = ?";
-        try {
-            Crypto.CurrencyDetails cryptoDetails = jdbcTemplate.queryForObject(sql, new CryptoDetailsMapper(), symbol);
-            return Optional.ofNullable(cryptoDetails);
-        } catch (Exception e) {
-            log.error("Error fetching Crypto by symbol: {}", symbol, e);
-            return Optional.empty();
-        }
-    }
-    public Optional<Crypto.CurrencyDetails> getById(Integer id) {
+
+    // Optional returns Object or None
+    public Optional<Crypto> getById(Integer id) {
         String sql = "SELECT * FROM \"Crypto\" WHERE id = ?";
         try {
-            Crypto.CurrencyDetails cryptoDetails = jdbcTemplate.queryForObject(sql, new CryptoDetailsMapper(), id);
-            return Optional.ofNullable(cryptoDetails);
+            Crypto crypto = jdbcTemplate.queryForObject(sql, new CryptoMapper(), id);
+            return Optional.ofNullable(crypto);
         } catch (Exception e) {
-            log.error("Error fetching Crypto by ID: {}", id, e);
+            // If no result is found, return None
             return Optional.empty();
         }
     }
-    public void create(Crypto.CurrencyDetails cryptoDetails) {
-        String sql = "INSERT INTO \"Crypto\" (id, symbol, name, description, logoUrl) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
-                cryptoDetails.getSymbol(),
-                cryptoDetails.getName(),
-                cryptoDetails.getDescription(),
-                cryptoDetails.getLogoUrl());
+
+    public Optional<Crypto> getBySymbol(String symbol) {
+        String sql = "SELECT * FROM \"Crypto\" WHERE symbol = ?";
+        try {
+            Crypto crypto = jdbcTemplate.queryForObject(sql, new CryptoMapper(), symbol);
+            return Optional.ofNullable(crypto);
+        } catch (Exception e) {
+            // If no result is found, return None
+            return Optional.empty();
+        }
     }
-    public void deleteById(Integer id) {
+
+    public void create(Crypto crypto) {
+        String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logoUrl) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl());
+    }
+
+    public void update(Crypto crypto, Integer id) {
+        String sql = "UPDATE \"Crypto\" SET name = ?, symbol = ?, description = ?, logoUrl = ? WHERE id = ?";
+        jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl(), id);
+
+    }
+
+    public void delete(Integer id) {
         String sql = "DELETE FROM \"Crypto\" WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-    public void updateById(Integer id, Crypto.CurrencyDetails cryptoDetails) {
-        String sql = "UPDATE \"Crypto\" SET symbol = ?, name = ?, description = ?, logoUrl = ? WHERE id = ?";
-        jdbcTemplate.update(sql,
-                cryptoDetails.getSymbol(),
-                cryptoDetails.getName(),
-                cryptoDetails.getDescription(),
-                cryptoDetails.getLogoUrl(),
-                id);
-    }
-
-    public void initializeDatabase() {
-        log.info("---Initializing database with dynamic data from Crypto class...");
-
-        crypto.cryptoMap.forEach((id, details) -> {
-            try {
-                // Verify if the record already exists
-                String checkSql = "SELECT COUNT(*) FROM \"Crypto\" WHERE id = ?";
-                Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, id);
-
-                if (count == null || count == 0) {
-                    String insertSql = "INSERT INTO \"Crypto\" (id, symbol, name, description, logoUrl) VALUES (?, ?, ?, ?, ?)";
-                    jdbcTemplate.update(insertSql, id, details.getSymbol(), details.getName(), details.getDescription(), details.getLogoUrl());
-                } else {
-//                    log.info("Skipping insert for Crypto ID: {} as it already exists.", id);
-                }
-            } catch (Exception e) {
-                log.error("Error inserting data for Crypto ID: {}", id, e);
-            }
-        });
-
-        log.info("Database initialization complete.");
+        var deleted = jdbcTemplate.update(sql, id);
+        if (deleted == 0) {
+            throw new EmptyResultDataAccessException("Crypto with id " + id + " not found.", 1);
+        }
     }
 }
+
