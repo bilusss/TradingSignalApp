@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -21,7 +22,7 @@ public class TransactionRepository {
     public static class TransactionMapper implements RowMapper<Transaction> {
         @Override
         public Transaction mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Transaction transaction = new Transaction(1, "s", 1, 1, 2, 1.0, 100000.0, LocalDateTime.now(), 100000.0, "aa");
+            Transaction transaction = new Transaction(1, "s", 1, 1, 2, 1.0, 100000.0, 100000.0, "aa");
             transaction.setId(rs.getInt("id"));
             transaction.setTitle(rs.getString("title"));
             transaction.setUserId(rs.getInt("userId"));
@@ -29,7 +30,7 @@ public class TransactionRepository {
             transaction.setCryptoIdSold(rs.getInt("cryptoIdSold"));
             transaction.setAmountBought(rs.getDouble("amountBought"));
             transaction.setAmountSold(rs.getDouble("amountSold"));
-            transaction.setCompletedAt(rs.getTimestamp("completed_at").toLocalDateTime());
+//            transaction.setCompletedAt(rs.getTimestamp("completed_at").toLocalDateTime());
             transaction.setPrice(rs.getDouble("price"));
             transaction.setDescription(rs.getString("description"));
             return transaction;
@@ -59,21 +60,21 @@ public class TransactionRepository {
         }
     }
     public void create(Transaction transaction) {
-        String sql = "INSERT INTO \"Transactions\"(id,title,userId,cryptoIdBought,cryptoIdSold,amountBought,amountSold,completed_at,price,description) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-        try {
+        String sql = "   INSERT INTO \"Transactions\"(title, userid, cryptoIdBought, cryptoIdSold, amountBought, amountSold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?);;";
+//        try {
             var created = jdbcTemplate.update(sql,transaction.getId(), transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
-                    transaction.getAmountSold(), transaction.getCompletedAt(), transaction.getPrice(), transaction.getDescription());
-        } catch (Exception e){
-            // Implement error handling to frontend
-        }
+                    transaction.getAmountSold(), transaction.getPrice(), transaction.getDescription());
+//        } catch (Exception e){
+//            // Implement error handling to frontend
+//        }
     }
     public void update(Transaction transaction, int id) {
-        String sql = "UPDATE \"Transactions\" SET id = ?, title = ?, userId = ?, cryptoIdBought = ?, cryptoIdSold = ?, amountBought = ?, amountSold = ?, completed_at = ?, price = ?, description = ? WHERE id = ?";
+        String sql = "UPDATE \"Transactions\" SET id = ?, title = ?, userId = ?, crytoidbought = ?, cryptoidsold = ?, amountbought = ?, amountsold = ?, price = ?, description = ? WHERE id = ?";
         try {
             var updated = jdbcTemplate.update(sql,transaction.getId(), transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
-                    transaction.getAmountSold(), transaction.getCompletedAt(), transaction.getPrice(), transaction.getDescription());
+                    transaction.getAmountSold(),/*, transaction.getCompletedAt(), */transaction.getPrice(), transaction.getDescription());
         } catch (Exception e){
             // Implement error handling to frontend
         }
@@ -87,5 +88,16 @@ public class TransactionRepository {
             // Implement error handling to frontend
 
         }
+    }
+    public Map<String, Float> getBalance(Integer userId){
+        String sql = "SELECT * FROM \"Transactions\" WHERE userId = ?";
+        Map<String, Float> balance;
+        System.out.println("AAAAAAAA");
+        List<Transaction> listOfTransactions = jdbcTemplate.query(sql, new TransactionMapper(), userId);
+        System.out.println("BBBBBBB");
+        for (Transaction transaction : listOfTransactions) {
+            System.out.println(transaction);
+        }
+        return Map.of("cryptoIdBought", 0.0f, "cryptoIdSold", 0.0f);
     }
 }

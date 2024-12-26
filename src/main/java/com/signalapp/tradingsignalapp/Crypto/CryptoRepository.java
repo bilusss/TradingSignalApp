@@ -94,7 +94,7 @@ public class CryptoRepository {
                     String insertSql = "INSERT INTO \"Crypto\" (id, symbol, name, description, logoUrl) VALUES (?, ?, ?, ?, ?)";
                     jdbcTemplate.update(insertSql, id, details.getSymbol(), details.getName(), details.getDescription(), details.getLogoUrl());
                 } else {
-                    log.info("Skipping insert for Crypto ID: {} as it already exists.", id);
+//                    log.info("Skipping insert for Crypto ID: {} as it already exists.", id);
                 }
             } catch (Exception e) {
                 log.error("Error inserting data for Crypto ID: {}", id, e);

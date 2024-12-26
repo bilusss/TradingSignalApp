@@ -10,11 +10,13 @@ public class Transaction {
     public Integer cryptoIdSold;
     public Double amountBought;
     public Double amountSold;
-    public LocalDateTime completedAt;
+//    public LocalDateTime completedAt;
     public Double price;
     public String description;
 
-    public Transaction( Integer id, String title, Integer userId, Integer cryptoIdBought, Integer cryptoIdSold, Double amountBought, Double amountSold, LocalDateTime completedAt, Double price, String description) {
+    public Transaction() {
+    }
+    public Transaction( Integer id, String title, Integer userId, Integer cryptoIdBought, Integer cryptoIdSold, Double amountBought, Double amountSold/*, LocalDateTime completedAt*/, Double price, String description) {
         this.id = id;
         this.title = title;
         this.userId = userId;
@@ -22,7 +24,7 @@ public class Transaction {
         this.cryptoIdSold = cryptoIdSold;
         this.amountBought = amountBought;
         this.amountSold = amountSold;
-        this.completedAt = completedAt;
+//        this.completedAt = completedAt;
         this.price = price;
         this.description = description;
     }
@@ -42,8 +44,8 @@ public class Transaction {
     public void setAmountBought(Double amountBought) { this.amountBought = amountBought; }
     public Double getAmountSold() { return amountSold; }
     public void setAmountSold(Double amountSold) { this.amountSold = amountSold; }
-    public LocalDateTime getCompletedAt() { return completedAt; }
-    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
+//    public LocalDateTime getCompletedAt() { return completedAt; }
+//    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
     public String getDescription() { return description; }
@@ -59,7 +61,7 @@ public class Transaction {
                 "cryptoIdSold:" + cryptoIdSold +
                 "amountBought:" + amountBought +
                 "amountSold:" + amountSold +
-                "completedAt:" + completedAt +
+//                "completedAt:" + completedAt +
                 "price:" + price +
                 "description:" + description +"}";
     }
