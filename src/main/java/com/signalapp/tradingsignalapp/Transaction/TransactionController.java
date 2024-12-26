@@ -48,9 +48,9 @@ public class TransactionController {
     void delete(@PathVariable Integer id){
         transactionRepository.delete(id);
     }
+    // balance
     @GetMapping("/balance/{userId}")
-    Map<String, Float> getBalance(@PathVariable Integer userId){
-        transactionRepository.getBalance(userId);
-        return new HashMap<>();
+    Map<Integer, Double> getBalance(@PathVariable Integer userId){
+        return transactionRepository.getBalance(userId);
     }
 }

@@ -1,4 +1,5 @@
 package com.signalapp.tradingsignalapp.Transaction;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,11 +27,10 @@ public class TransactionRepository {
             transaction.setId(rs.getInt("id"));
             transaction.setTitle(rs.getString("title"));
             transaction.setUserId(rs.getInt("userId"));
-            transaction.setCryptoIdBought(rs.getInt("cryptoIdBought"));
-            transaction.setCryptoIdSold(rs.getInt("cryptoIdSold"));
+            transaction.setCryptoIdBought(rs.getInt("cryptoidbought"));
+            transaction.setCryptoIdSold(rs.getInt("cryptoidsold"));
             transaction.setAmountBought(rs.getDouble("amountBought"));
             transaction.setAmountSold(rs.getDouble("amountSold"));
-//            transaction.setCompletedAt(rs.getTimestamp("completed_at").toLocalDateTime());
             transaction.setPrice(rs.getDouble("price"));
             transaction.setDescription(rs.getString("description"));
             return transaction;
@@ -60,9 +60,9 @@ public class TransactionRepository {
         }
     }
     public void create(Transaction transaction) {
-        String sql = "   INSERT INTO \"Transactions\"(title, userid, cryptoIdBought, cryptoIdSold, amountBought, amountSold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?);;";
+        String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 //        try {
-            var created = jdbcTemplate.update(sql,transaction.getId(), transaction.getTitle(), transaction.getUserId(),
+            var created = jdbcTemplate.update(sql, transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
                     transaction.getAmountSold(), transaction.getPrice(), transaction.getDescription());
 //        } catch (Exception e){
@@ -70,11 +70,11 @@ public class TransactionRepository {
 //        }
     }
     public void update(Transaction transaction, int id) {
-        String sql = "UPDATE \"Transactions\" SET id = ?, title = ?, userId = ?, crytoidbought = ?, cryptoidsold = ?, amountbought = ?, amountsold = ?, price = ?, description = ? WHERE id = ?";
+        String sql = "UPDATE \"Transactions\" SET id = ?, title = ?, userId = ?, cryptoIdBought = ?, cryptoidsold = ?, amountbought = ?, amountsold = ?, price = ?, description = ? WHERE id = ?";
         try {
             var updated = jdbcTemplate.update(sql,transaction.getId(), transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
-                    transaction.getAmountSold(),/*, transaction.getCompletedAt(), */transaction.getPrice(), transaction.getDescription());
+                    transaction.getAmountSold(), transaction.getPrice(), transaction.getDescription());
         } catch (Exception e){
             // Implement error handling to frontend
         }
@@ -89,15 +89,35 @@ public class TransactionRepository {
 
         }
     }
-    public Map<String, Float> getBalance(Integer userId){
+    public Map<Integer, Double> getBalance(Integer userId){
         String sql = "SELECT * FROM \"Transactions\" WHERE userId = ?";
-        Map<String, Float> balance;
-        System.out.println("AAAAAAAA");
+        Map<Integer, Double> balance = new HashMap<>();;
         List<Transaction> listOfTransactions = jdbcTemplate.query(sql, new TransactionMapper(), userId);
-        System.out.println("BBBBBBB");
+
         for (Transaction transaction : listOfTransactions) {
-            System.out.println(transaction);
+            System.out.println(transaction.cryptoIdBought + " " + transaction.amountBought + " : " + transaction.cryptoIdSold + " " + transaction.amountSold);
         }
-        return Map.of("cryptoIdBought", 0.0f, "cryptoIdSold", 0.0f);
+
+        for (Transaction transaction : listOfTransactions) {
+            Integer idbought = transaction.getCryptoIdBought();
+            Double amountbought = transaction.getAmountBought();
+            Integer idsold = transaction.getCryptoIdSold();
+            Double amountsold = transaction.getAmountSold();
+
+            // BOUGHT
+            if (balance.containsKey(idbought)) { // multiple txs on certain coin
+                balance.replace(idbought, balance.get(idbought) + amountbought);
+            } else { // first tx on coin
+                balance.put(idbought, amountbought);
+            }
+            // SOLD
+            if (balance.containsKey(idsold)) { // multiple txs on certain coin
+                balance.replace(idsold, balance.get(idsold) - amountsold);
+            } else { // first tx on coin
+                balance.put(idsold, -amountsold);
+            }
+        }
+        System.out.println(balance);
+        return balance;
     }
 }
