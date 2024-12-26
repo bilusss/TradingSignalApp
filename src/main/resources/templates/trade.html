@@ -51,34 +51,46 @@
         <tr class="tr-title">
             <th>Name</th>
             <th>Symbol</th>
-            <th>Current Price</th>
+            <th>Description</th>
+            <!-- ADDITIONAL INFO CAN BE ADDED -->
             <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>
-                <img src="https://cdn.jsdelivr.net/gh/vadimmalykhin/binance-icons/crypto/btc.svg" alt="Bitcoin" style="width: 20px; height: 20px; margin-right: 8px;">
-                BITCOIN
-            </td>
-            <td>BTC</td>
-            <td>91 185,00 €</td>
-            <td><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></td>
-        </tr>
-        <tr>
-            <td>
-                <img src="https://cdn.jsdelivr.net/gh/vadimmalykhin/binance-icons/crypto/eth.svg" alt="Ethereum" style="width: 20px; height: 20px; margin-right: 8px;">
-                ETHERUM
-            </td>
-            <td>ETH</td>
-            <td>3 143,35 €</td>
-            <td><a href="/trade/chart" class="btn btn-outline-success btn-sm btn-block">Buy/sell</a></td>
-        </tr>
+        <!-- JS -->
         </tbody>
     </table>
 </div>
 
 
-
+<script src="/js/script.js"></script>
+<script>
+    const myList = document.querySelector("tbody")
+    window.onload = async function (){
+        const cryptoList = await getCrypto()
+        for (var crypto of cryptoList) {
+            var myItem = document.createElement('tr')
+            const button = '<td><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></td>'
+            var columns = ['name','symbol','description']
+            for (var column of columns){
+                var col = document.createElement('td')
+                if (column === 'name'){
+                    var img = document.createElement('img')
+                    img.setAttribute('src', crypto.logoUrl)
+                    img.setAttribute('class','crypto-image')
+                    var a = document.createElement('a')
+                    a.innerHTML = crypto[column].toUpperCase()
+                    col.appendChild(img)
+                    col.appendChild(a)
+                }else{
+                    col.innerHTML = crypto[column]
+                }
+                myItem.appendChild(col)
+            }
+            myItem.innerHTML+=button
+            myList.appendChild(myItem)
+        }
+    }
+</script>
 </body>
 </html>

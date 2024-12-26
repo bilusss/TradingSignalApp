@@ -1,5 +1,6 @@
 package com.signalapp.tradingsignalapp.Crypto;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,17 +40,33 @@ public class CryptoController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     void create(@RequestBody Crypto crypto){
-        cryptoRepository.create(crypto);
+        try{
+            cryptoRepository.create(crypto);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
     void update(@RequestBody Crypto crypto, @PathVariable Integer id){
-        cryptoRepository.update(crypto, id);
+        try{
+            cryptoRepository.update(crypto, id);
+        }catch (EmptyResultDataAccessException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     void delete(@PathVariable Integer id){
-        cryptoRepository.delete(id);
+        try{
+            cryptoRepository.delete(id);
+        } catch (EmptyResultDataAccessException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }

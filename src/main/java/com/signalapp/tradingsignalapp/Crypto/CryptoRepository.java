@@ -1,6 +1,7 @@
 package com.signalapp.tradingsignalapp.Crypto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -52,6 +53,7 @@ public class CryptoRepository {
             return Optional.empty();
         }
     }
+
     public Optional<Crypto> getBySymbol(String symbol) {
         String sql = "SELECT * FROM \"Crypto\" WHERE symbol = ?";
         try {
@@ -62,33 +64,24 @@ public class CryptoRepository {
             return Optional.empty();
         }
     }
+
     public void create(Crypto crypto) {
         String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logoUrl) VALUES (?, ?, ?, ?)";
-        try {
-            var created = jdbcTemplate.update( sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl());
-
-        } catch (Exception e) {
-            // Implement error handling to fronend
-
-        }
+        jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl());
     }
+
     public void update(Crypto crypto, Integer id) {
         String sql = "UPDATE \"Crypto\" SET name = ?, symbol = ?, description = ?, logoUrl = ? WHERE id = ?";
-        try {
-            var updated = jdbcTemplate.update( sql,  crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl(),id);
+        jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl(), id);
 
-        } catch (Exception e) {
-            // Implement error handling to fronend
+    }
 
-        }
-    }public void delete(Integer id) {
+    public void delete(Integer id) {
         String sql = "DELETE FROM \"Crypto\" WHERE id = ?";
-        try {
-            var deleted = jdbcTemplate.update(sql, id);
-
-        } catch (Exception e) {
-            // Implement error handling to fronend
-
+        var deleted = jdbcTemplate.update(sql, id);
+        if (deleted == 0) {
+            throw new EmptyResultDataAccessException("Crypto with id " + id + " not found.", 1);
         }
     }
 }
+
