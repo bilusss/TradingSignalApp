@@ -1,5 +1,6 @@
 package com.signalapp.tradingsignalapp.Transaction;
 
+import com.signalapp.tradingsignalapp.Service.BinanceCurrentPrice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +20,7 @@ public class TransactionRepository {
 
     public static final Logger log = LoggerFactory.getLogger(TransactionRepository.class);
     private final JdbcTemplate jdbcTemplate;
+    private final BinanceCurrentPrice binanceCurrentPrice;
 
     public static class TransactionMapper implements RowMapper<Transaction> {
         @Override
@@ -37,8 +39,9 @@ public class TransactionRepository {
         }
     }
 
-    public TransactionRepository(JdbcTemplate jdbcTemplate) {
+    public TransactionRepository(JdbcTemplate jdbcTemplate, BinanceCurrentPrice binanceCurrentPrice) {
         this.jdbcTemplate = jdbcTemplate;
+        this.binanceCurrentPrice = binanceCurrentPrice;
     }
 
     // Pretty simple we make SQL query using jbdc ( its like sql alchemy )
@@ -121,14 +124,18 @@ public class TransactionRepository {
         return balance;
     }
     public Map<Integer, Double> getBalance(Integer userId){
-        Map<Integer,Double> balance = new HashMap<>();
+        Map<Integer, Double> balance = new HashMap<>();
         Map<Integer, Double> amount = getAmount(userId);
+        Map<String, Double> currentUSDTPrices = binanceCurrentPrice.currentUSDTPrices;
+
 
         for (Map.Entry<Integer, Double> entry : amount.entrySet()) {
             Integer id = entry.getKey();
             Double amountBought = entry.getValue();
-            balance.put(id, amountBought);
+            //TODO XXXX = crypto.IdToSymbol(id)
+//            balance.put(id, amountBought * currentUSDTPrices.get(XXXX);
         }
+        System.out.println(balance);
         return balance;
     }
 
