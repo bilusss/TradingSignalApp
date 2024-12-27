@@ -64,13 +64,13 @@ public class TransactionRepository {
     }
     public void create(Transaction transaction) {
         String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-//        try {
+        try {
             var created = jdbcTemplate.update(sql, transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
                     transaction.getAmountSold(), transaction.getPrice(), transaction.getDescription());
-//        } catch (Exception e){
-//            // Implement error handling to frontend
-//        }
+        } catch (Exception e){
+            // Implement error handling to frontend
+        }
     }
     public void update(Transaction transaction, int id) {
         String sql = "UPDATE \"Transactions\" SET id = ?, title = ?, userId = ?, cryptoIdBought = ?, cryptoidsold = ?, amountbought = ?, amountsold = ?, price = ?, description = ? WHERE id = ?";
@@ -94,7 +94,7 @@ public class TransactionRepository {
     }
     public Map<Integer, Double> getAmount(Integer userId){
         String sql = "SELECT * FROM \"Transactions\" WHERE userId = ?";
-        Map<Integer, Double> balance = new HashMap<>();;
+        Map<Integer, Double> amount = new HashMap<>();;
         List<Transaction> listOfTransactions = jdbcTemplate.query(sql, new TransactionMapper(), userId);
 
         for (Transaction transaction : listOfTransactions) {
@@ -108,20 +108,20 @@ public class TransactionRepository {
             Double amountsold = transaction.getAmountSold();
 
             // BOUGHT
-            if (balance.containsKey(idbought)) { // multiple txs on certain coin
-                balance.replace(idbought, balance.get(idbought) + amountbought);
+            if (amount.containsKey(idbought)) { // multiple txs on certain coin
+                amount.replace(idbought, amount.get(idbought) + amountbought);
             } else { // first tx on coin
-                balance.put(idbought, amountbought);
+                amount.put(idbought, amountbought);
             }
             // SOLD
-            if (balance.containsKey(idsold)) { // multiple txs on certain coin
-                balance.replace(idsold, balance.get(idsold) - amountsold);
+            if (amount.containsKey(idsold)) { // multiple txs on certain coin
+                amount.replace(idsold, amount.get(idsold) - amountsold);
             } else { // first tx on coin
-                balance.put(idsold, -amountsold);
+                amount.put(idsold, -amountsold);
             }
         }
-        System.out.println(balance);
-        return balance;
+        System.out.println(amount);
+        return amount;
     }
     public Map<Integer, Double> getBalance(Integer userId){
         Map<Integer, Double> balance = new HashMap<>();
@@ -133,10 +133,10 @@ public class TransactionRepository {
             Integer id = entry.getKey();
             Double amountBought = entry.getValue();
             //TODO XXXX = crypto.IdToSymbol(id)
-//            balance.put(id, amountBought * currentUSDTPrices.get(XXXX);
+            // currentUSDTPrices.get("XXXX")
+            balance.put(id, amountBought * currentUSDTPrices.get("ETH"));
         }
         System.out.println(balance);
         return balance;
     }
-
 }
