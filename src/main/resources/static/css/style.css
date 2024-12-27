@@ -39,6 +39,11 @@ body {
 .table th{
     border-top: none!important;
 }
+.crypto-image{
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
 
 h1, h2 {
     color: #FFFFFF;

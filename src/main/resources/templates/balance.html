@@ -42,29 +42,49 @@
             </div>
         </form>
     </div>
-
 </nav>
 <div class="mx-2 my-5" >
     <h2 class="trade-heading pb-3">Check out yours balance</h2>
     <div class="container">
-        <div class="card bg-light text-primary w-25">
-            <div class="card-body">
-                <h5 class="card-title">BITCOIN</h5>
-                <h6 class="card-subtitle mb-2 text-muted">BTC</h6>
-                <div class="d-flex"><b><p class="card-text mr-2">AMOUNT: </p></b><p class="card-text">0,812</p></div>
-                <div class="d-flex"><b><p class="card-text mr-2">VALUE: </p></b><p class="card-text">2000000$</p></div>
-                <div class="my-2">
-                    <a href="#" class="card-link">Wallet</a>
-                    <a href="#" class="card-link">Trade</a>
-                </div>
-
-            </div>
+        <div class="row" id="card-container">
+            <!-- Cards will be added here -->
         </div>
     </div>
-
 </div>
 
 
-
+<script src="/js/script.js"></script>
+<script>
+    window.onload = async function (){
+        userAmount = await getAmount()
+        userBalance = await getBalance()
+        for (const [id, amount] of Object.entries(userAmount)) {
+            if (value){
+                const crypto = await getCryptoById(id)
+                createCard(crypto.name, crypto.symbol, amount, userBalance[id])
+            }
+        }
+    }
+    function createCard(currencyName, currencySymbol, amount, price){
+        const container = document.querySelector('#card-container')
+        const cardHTML = `
+        <div class="col-12 col-sm-6 col-md-3 mb-4">
+            <div class="card bg-light text-primary">
+                <div class="card-body">
+                    <h5 class="card-title">${currencyName}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${currencySymbol}</h6>
+                    <div class="d-flex"><b><p class="card-text mr-2">AMOUNT: </p></b><p class="card-text">${amount}</p></div>
+                    <div class="d-flex"><b><p class="card-text mr-2">VALUE: </p></b><p class="card-text">${price}$</p></div>
+                    <div class="my-2">
+                        <a href="/wallet" class="card-link">Wallet</a>
+                        <a href="/trade/chart/${currencySymbol}" class="card-link">Trade</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        container.innerHTML += cardHTML;
+    }
+</script>
 </body>
 </html>
