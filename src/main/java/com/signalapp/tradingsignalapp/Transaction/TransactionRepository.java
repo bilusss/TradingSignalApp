@@ -89,7 +89,7 @@ public class TransactionRepository {
 
         }
     }
-    public Map<Integer, Double> getBalance(Integer userId){
+    public Map<Integer, Double> getAmount(Integer userId){
         String sql = "SELECT * FROM \"Transactions\" WHERE userId = ?";
         Map<Integer, Double> balance = new HashMap<>();;
         List<Transaction> listOfTransactions = jdbcTemplate.query(sql, new TransactionMapper(), userId);
@@ -120,4 +120,16 @@ public class TransactionRepository {
         System.out.println(balance);
         return balance;
     }
+    public Map<Integer, Double> getBalance(Integer userId){
+        Map<Integer,Double> balance = new HashMap<>();
+        Map<Integer, Double> amount = getAmount(userId);
+
+        for (Map.Entry<Integer, Double> entry : amount.entrySet()) {
+            Integer id = entry.getKey();
+            Double amountBought = entry.getValue();
+            balance.put(id, amountBought);
+        }
+        return balance;
+    }
+
 }
