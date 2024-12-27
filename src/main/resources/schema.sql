@@ -12,3 +12,15 @@ CREATE TABLE IF NOT EXISTS "Crypto" (
     description varchar(250) NOT NULL,
     logourl varchar(250) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS "Transactions" (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(50) NOT NULL,
+    userId INTEGER NOT NULL,
+    cryptoIdBought INTEGER NOT NULL,
+    cryptoIdSold INTEGER NOT NULL,
+    amountBought DOUBLE PRECISION NOT NULL,
+    amountSold DOUBLE PRECISION NOT NULL,
+    price DOUBLE PRECISION NOT NULL,
+    description varchar(250) NOT NULL
+    );
