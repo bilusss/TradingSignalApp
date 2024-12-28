@@ -111,42 +111,68 @@ public class CryptoRepository {
         String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logourl) VALUES (?, ?, ?, ?)";
         Crypto crypto;
         String logoUrl;
+        boolean usdtFlag = false;
         List<String> repeated = new ArrayList<>();
+        List<String> noLink = new ArrayList<>();
         Map<String, BinanceExchangeInfo.SymbolInfo> symbolInfoMap = binanceExchangeInfo.getSymbolInfoMap();
+        int total = symbolInfoMap.size();
+        int count = 0;
         for (Map.Entry<String, BinanceExchangeInfo.SymbolInfo> entry : symbolInfoMap.entrySet()) {
-            if (entry.getValue().getSymbol().equals("BULLUSDT") && entry.getValue().getStatus().equals("TRADING") || entry.getValue().getSymbol().equals("BEARUSDT") && entry.getValue().getStatus().equals("TRADING")) {
-                // Have to be empty here :)
+            // Progress bar
+            double progress = (double) count / total * 100;
+            count += 1;
+            int progressBarWidth = 100;
+            int completed = (int) (progress / 100 * progressBarWidth);
+            String progressBar = "[" + "@".repeat(completed) + ".".repeat(progressBarWidth - completed) + "]";
+            System.out.print("\r" + progressBar + " " + String.format("%.2f", progress) + "%");
+            // Ifs
+            if (entry.getValue().getBaseAsset().equals("USDT") && !usdtFlag || entry.getValue().getSymbol().equals("BULLUSDT") && entry.getValue().getStatus().equals("TRADING") || entry.getValue().getSymbol().equals("BEARUSDT") && entry.getValue().getStatus().equals("TRADING")) {
+                if (entry.getValue().getBaseAsset().equals("USDT")) {
+                    usdtFlag = true;
+                }
             } else if (!entry.getKey().endsWith("USDT")) {
                 continue;
             } else if (entry.getValue().getBaseAsset().endsWith("BULL") || entry.getValue().getBaseAsset().endsWith("BEAR") || entry.getValue().getBaseAsset().endsWith("UP") || entry.getValue().getBaseAsset().endsWith("DOWN")) {
                 continue;
             }
             crypto = new Crypto();
+            // If repeated
+            if (getBySymbol(entry.getValue().getBaseAsset()).isPresent()) {
+                repeated.add(entry.getValue().getBaseAsset());
+                continue;
+            }
             // Symbol
             crypto.setSymbol(entry.getValue().getBaseAsset());
             // Name
             crypto.setName(namesMap.get(entry.getValue().getBaseAsset()));
+            if (crypto.getName() == null) {
+                continue;
+            }
             // Description TODO maybe make something more interesting here later
             crypto.setDescription("Cryptocurrency");
             // LogoUrl
-            https://bin.bnbstatic.com/static/assets/logos/SYMBOL.png
-            logoUrl = "https://bin.bnbstatic.com/static/assets/logos/" + crypto.getSymbol().toUpperCase() + ".png";
+            //https://bin.bnbstatic.com/static/assets/logos/SYMBOL.png
+            //https://raw.githubusercontent.com/Cryptofonts/cryptoicons/4cec1760cb089d38c46b7d5782e7daa89c91c62f/SVG/floki.svg
+            logoUrl = "https://raw.githubusercontent.com/Cryptofonts/cryptoicons/4cec1760cb089d38c46b7d5782e7daa89c91c62f/SVG/" + crypto.getSymbol().toLowerCase() + ".svg";
             if (isValidImageUrl(logoUrl)) {
                 crypto.setLogoUrl(logoUrl);
             } else {
-                log.warn("Invalid logo URL for symbol: " + crypto.getSymbol() + ", skipping logo");
                 crypto.setLogoUrl("");
+                noLink.add(crypto.getSymbol());
+                continue;
             }
-            // DB
-            if (getBySymbol(crypto.getSymbol()).isEmpty()) { // Adding to Database
-                jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl());
-            } else {
-                repeated.add(crypto.getSymbol());
-            }
+            // DB - adding
+            jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl());
         }
+//        System.out.println("\r" + "[" + "@".repeat(100) + "] " + " 100.00%");
+        System.out.print("\r");
         if (!repeated.isEmpty()) {
             int repCount = repeated.size();
             log.info("Skipped initializing " + repCount + " symbols: [" + String.join(", ", repeated) + "]");
+        }
+        if (!noLink.isEmpty()) {
+            int repCount = noLink.size();
+            log.warn("Invalid logo URL for " + repCount + " symbols: [" + String.join(", ", noLink) + "]");
         }
         log.info("Crypto Data initialized into Database");
     }
