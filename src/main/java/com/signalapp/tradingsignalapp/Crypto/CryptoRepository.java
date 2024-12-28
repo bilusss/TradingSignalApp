@@ -1,4 +1,5 @@
 package com.signalapp.tradingsignalapp.Crypto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.signalapp.tradingsignalapp.Service.BinanceExchangeInfo;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -93,13 +95,35 @@ public class CryptoRepository {
     @DependsOn("binanceExchangeInfo")
     @PostConstruct
     public void initializeCryptoData() {
-        String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logoUrl) VALUES (?, ?, ?, ?)";
-        Crypto crypto = new Crypto();
+        log.info("Initializing Crypto Data into Database");
+        String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logourl) VALUES (?, ?, ?, ?)";
+        Crypto crypto;
         Map<String, BinanceExchangeInfo.SymbolInfo> symbolInfoMap = binanceExchangeInfo.getSymbolInfoMap();
-        System.out.println(symbolInfoMap);
         for (Map.Entry<String, BinanceExchangeInfo.SymbolInfo> entry : symbolInfoMap.entrySet()) {
+            if (entry.getValue().getSymbol().equals("BULLUSDT") && entry.getValue().getStatus().equals("TRADING") || entry.getValue().getSymbol().equals("BEARUSDT") && entry.getValue().getStatus().equals("TRADING")){
+                // Have to be empty here :)
+            } else if (!entry.getKey().endsWith("USDT")) {
+                continue;
+            } else if (entry.getValue().getBaseAsset().endsWith("BULL") || entry.getValue().getBaseAsset().endsWith("BEAR") || entry.getValue().getBaseAsset().endsWith("UP") || entry.getValue().getBaseAsset().endsWith("DOWN")){
+                continue;
+            }
             crypto = new Crypto();
-            //TODO
+            // Symbol
+            crypto.setSymbol(entry.getKey().replace("USDT", ""));
+            // Name
+            try {
+                File file = new File("src/main/java/com/signalapp/tradingsignalapp/Crypto/names.json");
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, String> namesMap = objectMapper.readValue(file, Map.class);
+                crypto.setName(namesMap.get(crypto.getSymbol()));
+            }catch (Exception e){
+                crypto.setName(String.valueOf(e));
+            }
+            // Description TODO maybe make something more interesting here later
+            crypto.setDescription("Cryptocurrency");
+            // LogoUrl
+            crypto.setLogoUrl("https://cdn.jsdelivr.net/gh/vadimmalykhin/binance-icons/crypto/" + crypto.getSymbol().toLowerCase() + ".svg");
+            jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl());
         }
     }
 }
