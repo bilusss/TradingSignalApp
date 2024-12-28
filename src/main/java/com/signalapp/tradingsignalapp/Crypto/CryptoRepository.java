@@ -109,7 +109,6 @@ public class CryptoRepository {
             log.error(e.getMessage(), e);
             return;
         }
-        String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logourl) VALUES (?, ?, ?, ?)";
         Crypto crypto;
         String logoUrl;
         boolean usdtFlag = false;
@@ -163,7 +162,11 @@ public class CryptoRepository {
                 continue;
             }
             // DB - adding
-            create(crypto);
+            try {
+                create(crypto);
+            }catch (Exception e) {
+                log.error("Error creating Crypto: " + crypto.getSymbol(), e);
+            }
         }
 //        System.out.println("\r" + "[" + "@".repeat(100) + "] " + " 100.00%");
         System.out.print("\r");
