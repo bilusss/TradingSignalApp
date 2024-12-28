@@ -107,6 +107,7 @@ public class CryptoRepository {
             namesMap = objectMapper.readValue(file, Map.class);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            return;
         }
         String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logourl) VALUES (?, ?, ?, ?)";
         Crypto crypto;
