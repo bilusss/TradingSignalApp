@@ -106,7 +106,7 @@ public class CryptoRepository {
             ObjectMapper objectMapper = new ObjectMapper();
             namesMap = objectMapper.readValue(file, Map.class);
         } catch (Exception e) {
-            return;
+            log.error(e.getMessage(), e);
         }
         String sql = "INSERT INTO \"Crypto\"(name, symbol, description, logourl) VALUES (?, ?, ?, ?)";
         Crypto crypto;
@@ -162,7 +162,7 @@ public class CryptoRepository {
                 continue;
             }
             // DB - adding
-            jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl());
+            create(crypto);
         }
 //        System.out.println("\r" + "[" + "@".repeat(100) + "] " + " 100.00%");
         System.out.print("\r");
