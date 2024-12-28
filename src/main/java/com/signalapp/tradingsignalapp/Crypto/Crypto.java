@@ -56,4 +56,15 @@ public class Crypto {
     public void setLogoUrl(String logoUrl){
         this.logoUrl = logoUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Crypto{" +
+                "id=" + id +
+                ", name='" + name +
+                ", symbol='" + symbol +
+                ", description='" + description +
+                ", logoUrl='" + logoUrl +
+                '}';
+    }
 }
