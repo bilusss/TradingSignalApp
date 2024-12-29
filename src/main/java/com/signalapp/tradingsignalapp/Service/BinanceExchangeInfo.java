@@ -1,7 +1,10 @@
 package com.signalapp.tradingsignalapp.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.signalapp.tradingsignalapp.Crypto.CryptoRepository;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -23,6 +26,7 @@ public class BinanceExchangeInfo {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    public static final Logger log = LoggerFactory.getLogger(BinanceExchangeInfo.class);
 
     public BinanceExchangeInfo(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
@@ -47,8 +51,7 @@ public class BinanceExchangeInfo {
             System.out.println("Using cached exchange info");
             return;
         }
-
-        System.out.println("Fetching exchange info");
+        log.info("Fetching exchange info");
         String response = restTemplate.getForObject(URL_BINANCE_EXCHANGE_INFO, String.class);
 
         JsonNode rootNode = objectMapper.readTree(response);
@@ -81,7 +84,7 @@ public class BinanceExchangeInfo {
             }
         }
         double inTime = (System.currentTimeMillis() - currentTime)/1000;
-        System.out.println("Fetched in " + inTime + "s");
+        log.info("Fetched in " + inTime + "s");
         lastFetchTime = currentTime;
     }
 

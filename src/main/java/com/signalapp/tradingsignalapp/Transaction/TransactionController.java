@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -45,5 +46,15 @@ public class TransactionController {
     @DeleteMapping("/{id}")
     void delete(@PathVariable Integer id){
         transactionRepository.delete(id);
+    }
+    // amount
+    @GetMapping("/amount/{userId}")
+    Map<Integer, Double> getAmount(@PathVariable Integer userId){
+        return transactionRepository.getAmount(userId);
+    }
+    // balance
+    @GetMapping("/balance/{userId}")
+    Map<Integer, Double> getBalance(@PathVariable Integer userId){
+        return transactionRepository.getBalance(userId);
     }
 }
