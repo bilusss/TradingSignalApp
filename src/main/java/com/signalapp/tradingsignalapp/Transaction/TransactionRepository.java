@@ -92,6 +92,12 @@ public class TransactionRepository {
 
         }
     }
+    public void addBalance(Transaction transaction) {
+        String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        var created = jdbcTemplate.update(sql, "Adding balance", transaction.getUserId(),
+                transaction.getCryptoIdBought(), 1, transaction.getAmountBought(),
+                0.0, 0.0, "Adding balance");
+    }
     public Map<Integer, Double> getAmount(Integer userId){
         String sql = "SELECT * FROM \"Transactions\" WHERE userId = ?";
         Map<Integer, Double> amount = new HashMap<>();;

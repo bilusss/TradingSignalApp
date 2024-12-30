@@ -47,6 +47,16 @@ public class TransactionController {
     void delete(@PathVariable Integer id){
         transactionRepository.delete(id);
     }
+    // post
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/addBalance")
+    void addBalance(@RequestBody Transaction transaction){
+        try {
+            transactionRepository.addBalance(transaction);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
     // amount
     @GetMapping("/amount/{userId}")
     Map<Integer, Double> getAmount(@PathVariable Integer userId){
