@@ -24,28 +24,50 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     Transaction getById(@PathVariable Integer id){
-        Optional<Transaction> transaction = transactionRepository.getById(id);
-        if (transaction.isEmpty()){
+        Transaction transaction = transactionRepository.getById(id);
+        if (transaction == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return transaction.get();
+        return transaction;
     }
     // post
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     void create(@RequestBody Transaction transaction){
-        transactionRepository.create(transaction);
+        try {
+            transactionRepository.create(transaction);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
     // put
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
     void update(@RequestBody Transaction transaction, @PathVariable Integer id){
-        transactionRepository.update(transaction, id);
+        try {
+            transactionRepository.update(transaction, id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
     // delete
     @DeleteMapping("/{id}")
     void delete(@PathVariable Integer id){
-        transactionRepository.delete(id);
+        try {
+            transactionRepository.delete(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+    // post
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/addBalance")
+    void addBalance(@RequestBody Transaction transaction){
+        try {
+            transactionRepository.addBalance(transaction);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
     // amount
     @GetMapping("/amount/{userId}")
@@ -54,7 +76,7 @@ public class TransactionController {
     }
     // balance
     @GetMapping("/balance/{userId}")
-    Map<Integer, Double> getBalance(@PathVariable Integer userId){
+    Double getBalance(@PathVariable Integer userId){
         return transactionRepository.getBalance(userId);
     }
 }

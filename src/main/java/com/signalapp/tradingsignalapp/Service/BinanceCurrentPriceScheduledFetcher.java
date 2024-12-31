@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Component
 public class BinanceCurrentPriceScheduledFetcher {
     private static final Logger log = LoggerFactory.getLogger(BinanceCurrentPriceScheduledFetcher.class);
-    private static final int THREAD_SLEEP_INTERVAL_MS = 1 * 30 * 1000; // (30s) Sleep interval in milliseconds
+    private static final int THREAD_SLEEP_INTERVAL_MS = 1 * 60 * 1000; // (30s) Sleep interval in milliseconds
 
     private final BinanceCurrentPrice binanceCurrentPrice;
 
