@@ -56,13 +56,13 @@ public class TransactionRepository {
         return jdbcTemplate.query(sql, new TransactionMapper());
     }
 
-    public Optional<Transaction> getById(int id) {
+    public Transaction getById(int id) {
         String sql = "SELECT * FROM \"Transactions\" WHERE \"id\" = ?";
         try {
             Transaction transaction = jdbcTemplate.queryForObject(sql, new TransactionMapper(), id);
-            return Optional.ofNullable(transaction);
+            return transaction;
         } catch (Exception e) {
-            return Optional.empty();
+            return null;
         }
     }
     public void create(Transaction transaction) {

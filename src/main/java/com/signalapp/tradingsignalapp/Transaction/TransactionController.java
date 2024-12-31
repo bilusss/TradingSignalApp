@@ -24,11 +24,11 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     Transaction getById(@PathVariable Integer id){
-        Optional<Transaction> transaction = transactionRepository.getById(id);
-        if (transaction.isEmpty()){
+        Transaction transaction = transactionRepository.getById(id);
+        if (transaction == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return transaction.get();
+        return transaction;
     }
     // post
     @ResponseStatus(HttpStatus.CREATED)
