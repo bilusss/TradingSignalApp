@@ -41,6 +41,7 @@ public class BinanceCurrentPrice {
                     usdtPrices.put(symbolKey, price);
                 }
             }
+            usdtPrices.put("USDT", 1.0);
         } catch (Exception e) {
             System.err.println("Error fetching current price: " + e.getMessage());
         }
