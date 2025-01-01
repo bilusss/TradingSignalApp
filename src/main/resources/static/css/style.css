@@ -28,9 +28,8 @@ body {
 
 }
 .buy-container{
-    margin: 5px;
     background-color: #0B0E11;
-    border-radius: 15px;
+    border-radius: 7px;
 }
 
 .table th, .table td {
