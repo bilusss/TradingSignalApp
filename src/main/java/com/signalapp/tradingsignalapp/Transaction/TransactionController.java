@@ -1,6 +1,7 @@
 package com.signalapp.tradingsignalapp.Transaction;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -76,7 +77,7 @@ public class TransactionController {
     }
     // balance
     @GetMapping("/balance/{userId}")
-    Double getBalance(@PathVariable Integer userId){
+    Map<Integer, Double> getBalance(@PathVariable Integer userId){
         return transactionRepository.getBalance(userId);
     }
 }

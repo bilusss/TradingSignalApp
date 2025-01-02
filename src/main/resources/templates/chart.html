@@ -55,9 +55,9 @@
       <div class="col buy-container">
         <form id="transactionForm">
          <h2>Transaction</h2>
+          <input type="text" class="form-control" id="title" placeholder="Title">
           <input class="form-control" list="datalistSell" id="datalistSellInput" placeholder="Type to search...">
           <datalist id="datalistSell">
-            <option value="San Francisco">
           </datalist>
 
           <input type="number" class="form-control" id="amountSell" placeholder="How much you wanna sell">
@@ -65,7 +65,11 @@
           <input class="form-control" list="datalistBuy" id="datalistBuyInput" placeholder="Type to search...">
           <datalist id="datalistBuy">
           </datalist>
+
+          <input type="number" class="form-control" id="amountBuy" placeholder="How much you wanna buy">
           <button class="btn btn-primary" type="button" id="submitFormButton">Submit form</button>
+
+          <input type="text" class="form-control" id="description" placeholder="Description">
 
         </form>
       </div>
@@ -92,7 +96,7 @@
 <script src = "/js/script.js"></script>
 <script>
   window.onload = async function (){
-    addDatalist("datalistSell", await getCrypto())  // to be changed for user crypto
+    addDatalist("datalistSell", await getUserCrypto())  // to be changed for user crypto
     addDatalist("datalistBuy",await getCrypto())
   }
   document.getElementById("submitFormButton").addEventListener("click", manageTransactionForm);

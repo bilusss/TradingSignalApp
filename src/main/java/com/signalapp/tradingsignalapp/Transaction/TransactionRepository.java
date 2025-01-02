@@ -63,6 +63,11 @@ public class TransactionRepository {
             return null;
         }
     }
+    public List<Transaction> getByUserId(int id) {
+        String sql = "SELECT * FROM \"Transactions\" WHERE \"userid\" = ?";
+        return jdbcTemplate.query(sql, new TransactionMapper(), id);
+
+    }
     public void create(Transaction transaction) {
         String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
@@ -156,7 +161,7 @@ public class TransactionRepository {
         AmountExclude.replace(idsold, AmountExclude.get(idsold)+amountsold);
         return AmountExclude;
     }
-    public Double getBalance(Integer userId){
+    public Double getNetworth(Integer userId) {
         double balance = 0.0;
         Map<Integer, Double> amount = getAmount(userId);
         Map<String, Double> currentUSDTPrices = binanceCurrentPrice.currentUSDTPrices;
@@ -167,4 +172,17 @@ public class TransactionRepository {
         }
         return balance;
     }
+
+    public Map<Integer, Double> getBalance(Integer userId) {
+        Map<Integer, Double> balance = new HashMap<>();
+        Map<Integer, Double> amount = getAmount(userId);
+        Map<String, Double> currentUSDTPrices = binanceCurrentPrice.currentUSDTPrices;
+        for (Map.Entry<Integer, Double> entry : amount.entrySet()) {
+            Integer id = entry.getKey();
+            Double amountCoins = entry.getValue();
+            balance.put(id, amountCoins * currentUSDTPrices.get(cryptoRepository.getById(id).getSymbol()));
+        }
+        return balance;
+    }
+
 }
