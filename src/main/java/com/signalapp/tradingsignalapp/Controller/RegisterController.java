@@ -35,8 +35,7 @@ public class RegisterController {
         user.setCredit(20000d);
         System.out.println(user);
         userRepository.create(user);
-        session.setAttribute("userId", user.getId());
-        return "redirect:/home";
+        return "redirect:/login";
     }
 
 
