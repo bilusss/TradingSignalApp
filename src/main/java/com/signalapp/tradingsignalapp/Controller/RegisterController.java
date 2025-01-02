@@ -23,7 +23,7 @@ public class RegisterController {
     }
 
     @PostMapping(value = "/register")
-    public String handleRegistration(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public String handleRegistration(@RequestParam("username") String username, @RequestParam("password") String password, HttpSession session) {
         if (userRepository.getByUsername(username).isPresent()) {
             return "Error";
         }
@@ -34,6 +34,7 @@ public class RegisterController {
         user.setCredit(20000d);
         System.out.println(user);
         userRepository.create(user);
+        session.setAttribute("userId", user.getId());
         return "redirect:/home";
     }
 
