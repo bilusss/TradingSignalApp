@@ -55,25 +55,23 @@ public class CryptoRepository {
     }
 
     // Optional returns Object or None
-    public Optional<Crypto> getById(Integer id) {
+    public Crypto getById(Integer id) {
         String sql = "SELECT * FROM \"Crypto\" WHERE id = ?";
         try {
-            Crypto crypto = jdbcTemplate.queryForObject(sql, new CryptoMapper(), id);
-            return Optional.ofNullable(crypto);
+            return jdbcTemplate.queryForObject(sql, new CryptoMapper(), id);
         } catch (Exception e) {
             // If no result is found, return None
-            return Optional.empty();
+            return null;
         }
     }
 
-    public Optional<Crypto> getBySymbol(String symbol) {
+    public Crypto getBySymbol(String symbol) {
         String sql = "SELECT * FROM \"Crypto\" WHERE symbol = ?";
         try {
-            Crypto crypto = jdbcTemplate.queryForObject(sql, new CryptoMapper(), symbol);
-            return Optional.ofNullable(crypto);
+            return jdbcTemplate.queryForObject(sql, new CryptoMapper(), symbol);
         } catch (Exception e) {
             // If no result is found, return None
-            return Optional.empty();
+            return null;
         }
     }
 
@@ -137,7 +135,7 @@ public class CryptoRepository {
             }
             crypto = new Crypto();
             // If repeated
-            if (getBySymbol(entry.getValue().getBaseAsset()).isPresent()) {
+            if (getBySymbol(entry.getValue().getBaseAsset()) != null) {
                 repeated.add(entry.getValue().getBaseAsset());
                 continue;
             }

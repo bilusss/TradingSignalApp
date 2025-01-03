@@ -19,22 +19,22 @@ public class CryptoController {
         return cryptoRepository.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("id/{id}")
     Crypto getById(@PathVariable Integer id){
-        Optional <Crypto> crypto = cryptoRepository.getById(id);
-        if (crypto.isEmpty()){
+        Crypto crypto = cryptoRepository.getById(id);
+        if (crypto == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return crypto.get();
+        return crypto;
     }
 
     @GetMapping("/{symbol}")
     Crypto getBySymbol(@PathVariable String symbol){
-        Optional <Crypto> crypto = cryptoRepository.getBySymbol(symbol);
-        if (crypto.isEmpty()){
+        Crypto crypto = cryptoRepository.getBySymbol(symbol);
+        if (crypto == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return crypto.get();
+        return crypto;
     }
 
     @ResponseStatus(HttpStatus.CREATED)

@@ -70,7 +70,12 @@
         const cryptoList = await getCrypto()
         for (var crypto of cryptoList) {
             var myItem = document.createElement('tr')
-            const button = '<td><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></td>'
+            let button
+            if (crypto.symbol === "USDT") {
+                button = `<td><a href="/chart/USDTPLN"><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></a></td>`
+            } else {
+                button = `<td><a href="/chart/${crypto['symbol']}USDT"><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></a></td>`
+            }
             var columns = ['name','symbol','description']
             for (var column of columns){
                 var col = document.createElement('td')

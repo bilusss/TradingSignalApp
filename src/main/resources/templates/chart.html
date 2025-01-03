@@ -1,175 +1,322 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>TradingSignal</title>
-    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
+  <title>TradingSignal</title>
+  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="/js/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a style="padding-top:5px; padding-bottom:5px;" href="/home"><img src="/img/logo-navbar.png" width="65" height="50" alt="TradingSignalLogo"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0" >
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Vault</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Charts?</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Transactions</a>
-            </li>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #181a20;">
+  <a style="padding-top:5px; padding-bottom:5px;" href="/home"><img src="/img/logo-navbar.png" width="65" height="50" alt="TradingSignalLogo"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0" >
+      <li class="nav-item">
+        <a class="nav-link" href="/static">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/trade">Trade<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/transactions">Transactions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/balance">Balance</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/wallet">Wallet</a>
+      </li>
 
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">@</span>
-                </div>
-                <input type="text" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
-            </div>
-        </form>
-    </div>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">@</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
+      </div>
+    </form>
+  </div>
+
 </nav>
 
+<div class="row p-3">
+  <div class="col" >
+      <div id="Ticker">
+          <span style="text-align: center; " id="pair-interval"></span>
+          <span id="ticker-value">(0.00%)</span>
+      </div>
+    <div class="row">
+        <div id="chart" style="text-align: left;width: 83vw; height: 430px;"></div>
+        <div id="Intervals" class="d-flex flex-column align-items-center justify-content-center" style="width: 15vw; height: 430px;">
+            <style>
+                .custom-button {
+                    background-color: #181a20;
+                    color: white;
+                    border: none;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                    width: 7vw;
+                    height: 48px;
+                    font-size: 18px;
+                    transition: transform 0.2s, box-shadow 0.2s; /* Animation for hover effects */
+                }
+                .custom-button:hover {
+                    transform: scale(1.05); /* Slightly enlarges the button on hover */
+                    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+                }
+                .custom-button:active {
+                    transform: scale(0.95);
+                    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2); /* Reduces shadow when clicked */
+                }
+            </style>
+
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">1s</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">1m</button>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">3m</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">5m</button>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">15m</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">30m</button>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">1h</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">2h</button>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">4h</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">6h</button>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">8h</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">12h</button>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">1d</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">3d</button>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <button type="button" class="btn custom-button mb-1 mx-1">1w</button>
+                <button type="button" class="btn custom-button mb-1 mx-1">1M</button>
+            </div>
+            <script th:inline="javascript">
+                const buttons = document.querySelectorAll('.btn.custom-button');
+                const pair = /*[[${pair}]]*/ '';
+                buttons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const intervalButton = button.textContent.trim();
+                        const url = `http://localhost:8080/chart/${pair}/${intervalButton}`;
+                        closeSocket();
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 100);
+                    });
+                });
+            </script>
+        </div>
+
+        <script th:inline="javascript">
+            // const pair = /*[[${pair}]]*/ '';
+            const interval = /*[[${interval}]]*/ '';
+            const tick = /*[[${tick}]]*/ '';
+            const quotePrecision = /*[[${quotePrecision}]]*/ '';
+
+            // Setting start parameters
+            const pairIntervalElement = document.getElementById('pair-interval');
+            const tickerValueElement = document.getElementById('ticker-value');
+            pairIntervalElement.textContent = `${pair} on ${interval}:`;
+
+            function updateTickerDisplay(value) {
+                tickerValueElement.textContent = `(${value}%)`;
+                tickerValueElement.classList.remove('green', 'gray', 'red');
+
+                if (value > 0) {
+                    tickerValueElement.classList.add('green');
+                    tickerValueElement.textContent = `(+${value}%)`;
+                } else if (value == 0 || value == '0.00') {
+                    tickerValueElement.classList.add('gray');
+                } else {
+                    tickerValueElement.classList.add('red');
+                }
+            }
+
+            // https://github.com/tradingview/lightweight-charts
+            // https://tradingview.github.io/lightweight-charts/tutorials
+            function vh(percent) {
+                var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+                return (percent * h) / 100;
+            }
+
+            function vw(percent) {
+                var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                return (percent * w) / 100;
+            }
+
+            function vmin(percent) {
+                return Math.min(vh(percent), vw(percent));
+            }
+
+            function vmax(percent) {
+                return Math.max(vh(percent), vw(percent));
+            }
+
+            let chart = LightweightCharts.createChart(document.getElementById('chart'), {
+                width: vmax(83)-40,
+                height: 390,
+                layout: {
+                    background: { color: "#181a20" },
+                    textColor: "#DDDDDD",
+                },
+                grid: {
+                    vertLines: { color: "#444" },
+                    horzLines: { color: "#444" },
+                },
+                rightPriceScale: {
+                    borderVisible: false,
+                },
+                timeScale: {
+                    rightOffset: 12,
+                    barSpacing: 3,
+                    timeVisible: true,
+                    secondsVisible: false,
+                    lockVisibleTimeRangeOnResize: true,
+                    borderVisible: false,
+                },
+            });
+
+            // Candle configurate
+            function getPriceFormat(){
+                return { type: 'price', precision: calculatePrecision(tick), minMove: parseFloat(tick) };
+            }
+            function calculatePrecision(tickSize) {
+                if (!tickSize.includes('.')) {
+                    return 0;
+                }
+                const decimalPart = tickSize.split('.')[1] || "";
+                const trimmedDecimalPart = decimalPart.replace(/0+$/, ''); // Ignoring 0 at the end "0.01000000"
+                return trimmedDecimalPart.length;
+            }
+            const candleSeries = chart.addCandlestickSeries({
+                upColor: '#4caf50',// Bullish candles (up :D)
+                borderUpColor: '#4caf50',
+                wickUpColor: '#4caf50',
+                downColor: '#f44336', // Bearish candles (down :D)
+                borderDownColor: '#f44336',
+                wickDownColor: '#f44336',
+                priceFormat: getPriceFormat(),
+            });
+
+            // Adding historical data to chart
+            const historicalData = /*[[${historicalData}]]*/ [];
+            const formattedData = historicalData.map(entry => ({
+                time: Math.floor(entry[0] / 1000), // Convert time from milliseconds to seconds
+                open: parseFloat(entry[1]),
+                high: parseFloat(entry[2]),
+                low: parseFloat(entry[3]),
+                close: parseFloat(entry[4])
+            }));
+            candleSeries.setData(formattedData); // Setting data to candlestick chart
+
+            // WebSocket - Live data, handling "2 streams"
+            // Available interval: 1s 1m 3m 5m 15m 30m 1h 2h 4h 6h 8h 12h 1d 3d 1w 1M
+            const socket = new WebSocket(`wss://stream.binance.com:9443/ws/${pair.toLowerCase()}@ticker/${pair.toLowerCase()}@kline_${interval}`);
+
+            socket.onmessage = event => {
+                const message = JSON.parse(event.data);
+
+                // Handling new candles
+                if (message.e === 'kline') {
+                    const newCandle = {
+                        time: message.k.t / 1000, // Milisekundy na sekundy
+                        open: parseFloat(message.k.o),
+                        high: parseFloat(message.k.h),
+                        low: parseFloat(message.k.l),
+                        close: parseFloat(message.k.c),
+                    };
+                    candleSeries.update(newCandle);
+                }
+
+                // Handling new ticker
+                if (message.e === '24hrTicker') {
+                    const priceChangePercent = parseFloat(message.P);
+                    updateTickerDisplay(priceChangePercent.toFixed(2));
+                }
+            };
+
+            socket.onerror = error => {
+                console.error("WebSocket error:", error);
+                tickerValueElement.textContent = "Connection error!";
+            };
+            socket.onclose = () => {
+                console.warn("WebSocket connection closed.");
+                tickerValueElement.textContent = "Connection closed.";
+            };
+            function closeSocket() {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.close();
+                    console.log("WebSocket closed.");
+                }
+            }
+        </script>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col buy-container">
+        <form id="transactionForm">
+         <h2>Transaction</h2>
+          <input type="text" class="form-control" id="title" placeholder="Title">
+          <input class="form-control" list="datalistSell" id="datalistSellInput" placeholder="Type to search...">
+          <datalist id="datalistSell">
+          </datalist>
+
+          <input type="number" class="form-control" id="amountSell" placeholder="How much you wanna sell">
+
+          <input class="form-control" list="datalistBuy" id="datalistBuyInput" placeholder="Type to search...">
+          <datalist id="datalistBuy">
+          </datalist>
+
+          <input type="number" class="form-control" id="amountBuy" placeholder="How much you wanna buy">
+          <button class="btn btn-primary" type="button" id="submitFormButton">Submit form</button>
+
+          <input type="text" class="form-control" id="description" placeholder="Description">
+
+        </form>
+      </div>
+    </div>
+  </div>
 
 
-<div id="Ticker">
-    <span style="margin-top: 30px; margin-bottom: 30px; text-align: center; " id="pair-interval"></span>
-    <span id="ticker-value">(0.00%)</span>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="/img/logo-navbar.png" style="height: 15px;" alt="...">
+      <strong class="me-auto">TradingSignal</strong>
+      <small>Now</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Placeholder
+    </div>
+  </div>
 </div>
 
-<div id="chart" style="width: 800px; height: 400px;"></div>
-
-<script th:inline="javascript">
-    const pair = /*[[${pair}]]*/ '';
-    const interval = /*[[${interval}]]*/ '';
-    const tick = /*[[${tick}]]*/ '';
-    const quotePrecision = /*[[${quotePrecision}]]*/ '';
-
-    // Setting start parameters
-    const pairIntervalElement = document.getElementById('pair-interval');
-    const tickerValueElement = document.getElementById('ticker-value');
-    pairIntervalElement.textContent = `${pair} on ${interval}:`;
-
-    function updateTickerDisplay(value) {
-        tickerValueElement.textContent = `(${value}%)`;
-        tickerValueElement.classList.remove('green', 'gray', 'red');
-
-        if (value > 0) {
-            tickerValueElement.classList.add('green');
-            tickerValueElement.textContent = `(+${value}%)`;
-        } else if (value == 0 || value == '0.00') {
-            tickerValueElement.classList.add('gray');
-        } else {
-            tickerValueElement.classList.add('red');
-        }
-    }
-
-    // https://github.com/tradingview/lightweight-charts
-    // https://tradingview.github.io/lightweight-charts/tutorials
-
-    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-        width: 800,
-        height: 400,
-        layout: {
-            background: { color: "#222" },
-            textColor: "#DDDDDD",
-        },
-        grid: {
-            vertLines: { color: "#444" },
-            horzLines: { color: "#444" },
-        },
-        rightPriceScale: {
-            borderVisible: false,
-        },
-        timeScale: {
-            rightOffset: 12,
-            barSpacing: 3,
-            timeVisible: true,
-            secondsVisible: false,
-            lockVisibleTimeRangeOnResize: true,
-            borderVisible: false,
-        },
-    });
-
-    // Candle configurate
-    function getPriceFormat(){
-        return { type: 'price', precision: calculatePrecision(tick), minMove: parseFloat(tick) };
-    }
-    function calculatePrecision(tickSize) {
-        if (!tickSize.includes('.')) {
-            return 0;
-        }
-        const decimalPart = tickSize.split('.')[1] || "";
-        const trimmedDecimalPart = decimalPart.replace(/0+$/, ''); // Ignoring 0 at the end "0.01000000"
-        return trimmedDecimalPart.length;
-    }
-    console.log(getPriceFormat())
-    const candleSeries = chart.addCandlestickSeries({
-        upColor: '#4caf50',// Bullish candles (up :D)
-        borderUpColor: '#4caf50',
-        wickUpColor: '#4caf50',
-        downColor: '#f44336', // Bearish candles (down :D)
-        borderDownColor: '#f44336',
-        wickDownColor: '#f44336',
-        priceFormat: getPriceFormat(),
-    });
-
-    // Adding historical data to chart
-    const historicalData = /*[[${historicalData}]]*/ [];
-    const formattedData = historicalData.map(entry => ({
-        time: Math.floor(entry[0] / 1000), // Convert time from milliseconds to seconds
-        open: parseFloat(entry[1]),
-        high: parseFloat(entry[2]),
-        low: parseFloat(entry[3]),
-        close: parseFloat(entry[4])
-    }));
-    candleSeries.setData(formattedData); // Setting data to candlestick chart
-
-    // WebSocket - Live data, handling "2 streams"
-    // Available interval: 1s 1m 3m 5m 15m 30m 1h 2h 4h 6h 8h 12h 1d 3d 1w 1M
-    const socket = new WebSocket(`wss://stream.binance.com:9443/ws/${pair.toLowerCase()}@ticker/${pair.toLowerCase()}@kline_${interval}`);
-
-    socket.onmessage = event => {
-        const message = JSON.parse(event.data);
-
-        // Handling new candles
-        if (message.e === 'kline') {
-            const newCandle = {
-                time: message.k.t / 1000, // Milisekundy na sekundy
-                open: parseFloat(message.k.o),
-                high: parseFloat(message.k.h),
-                low: parseFloat(message.k.l),
-                close: parseFloat(message.k.c),
-            };
-            candleSeries.update(newCandle);
-        }
-
-        // Handling new ticker
-        if (message.e === '24hrTicker') {
-            const priceChangePercent = parseFloat(message.P);
-            updateTickerDisplay(priceChangePercent.toFixed(2));
-        }
-    };
-
-    socket.onerror = error => {
-        console.error("WebSocket error:", error);
-        tickerValueElement.textContent = "Connection error!";
-    };
-    //TODO make this closing
-    socket.onclose = () => {
-        console.warn("WebSocket connection closed.");
-        tickerValueElement.textContent = "Connection closed.";
-    };
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+<script src = "/js/script.js"></script>
+<script>
+  window.onload = async function (){
+    addDatalist("datalistSell", await getUserCrypto())  // to be changed for user crypto
+    addDatalist("datalistBuy",await getCrypto())
+  }
+  document.getElementById("submitFormButton").addEventListener("click", manageTransactionForm);
 </script>
 </body>
 </html>

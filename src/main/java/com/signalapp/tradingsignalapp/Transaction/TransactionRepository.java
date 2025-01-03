@@ -1,5 +1,6 @@
 package com.signalapp.tradingsignalapp.Transaction;
 
+import com.signalapp.tradingsignalapp.Crypto.CryptoRepository;
 import com.signalapp.tradingsignalapp.Service.BinanceCurrentPrice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +13,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
 
 @Repository
 public class TransactionRepository {
@@ -21,6 +20,7 @@ public class TransactionRepository {
     public static final Logger log = LoggerFactory.getLogger(TransactionRepository.class);
     private final JdbcTemplate jdbcTemplate;
     private final BinanceCurrentPrice binanceCurrentPrice;
+    private final CryptoRepository cryptoRepository;
 
     public static class TransactionMapper implements RowMapper<Transaction> {
         @Override
@@ -39,9 +39,10 @@ public class TransactionRepository {
         }
     }
 
-    public TransactionRepository(JdbcTemplate jdbcTemplate, BinanceCurrentPrice binanceCurrentPrice) {
+    public TransactionRepository(JdbcTemplate jdbcTemplate, BinanceCurrentPrice binanceCurrentPrice, CryptoRepository cryptoRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.binanceCurrentPrice = binanceCurrentPrice;
+        this.cryptoRepository = cryptoRepository;
     }
 
     // Pretty simple we make SQL query using jbdc ( its like sql alchemy )
@@ -53,18 +54,29 @@ public class TransactionRepository {
         return jdbcTemplate.query(sql, new TransactionMapper());
     }
 
-    public Optional<Transaction> getById(int id) {
+    public Transaction getById(int id) {
         String sql = "SELECT * FROM \"Transactions\" WHERE \"id\" = ?";
         try {
             Transaction transaction = jdbcTemplate.queryForObject(sql, new TransactionMapper(), id);
-            return Optional.ofNullable(transaction);
+            return transaction;
         } catch (Exception e) {
-            return Optional.empty();
+            return null;
         }
+    }
+    public List<Transaction> getByUserId(int id) {
+        String sql = "SELECT * FROM \"Transactions\" WHERE \"userid\" = ?";
+        return jdbcTemplate.query(sql, new TransactionMapper(), id);
+
     }
     public void create(Transaction transaction) {
         String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
+            Map<Integer, Double> amount = getAmount(transaction.getUserId());
+            if (amount.get(cryptoRepository.getById(transaction.getCryptoIdSold()).getId()) < transaction.getAmountSold()) {
+                throw new Exception("Insufficient funds!");
+            } else if (amount.get(cryptoRepository.getById(transaction.getCryptoIdSold()).getId()) == null) {
+                throw new Exception("No such crypto on your wallet!");
+            }
             var created = jdbcTemplate.update(sql, transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
                     transaction.getAmountSold(), transaction.getPrice(), transaction.getDescription());
@@ -75,7 +87,23 @@ public class TransactionRepository {
     public void update(Transaction transaction, int id) {
         String sql = "UPDATE \"Transactions\" SET id = ?, title = ?, userId = ?, cryptoIdBought = ?, cryptoidsold = ?, amountbought = ?, amountsold = ?, price = ?, description = ? WHERE id = ?";
         try {
-            var updated = jdbcTemplate.update(sql,transaction.getId(), transaction.getTitle(), transaction.getUserId(),
+            /**
+             * // Excluding the tx from his amount \\
+             * Imagine this scenario
+             * User has amount of $90k
+             * Then buys 1 BTC for $90k
+             * His amount will be +1 BTC, $0.0
+             * We need to exclude this tx that he made
+             * to make his amount be like before the tx
+             * to allow him update his tx
+             */
+            Map<Integer, Double> amountExclude = getAmountExclude(transaction, transaction.getUserId());
+            if (amountExclude.get(cryptoRepository.getById(transaction.getCryptoIdSold())) < transaction.getAmountSold()) {
+                throw new Exception("Insufficient funds!");
+            } else if (amountExclude.get(cryptoRepository.getById(transaction.getCryptoIdSold())) == null) {
+                throw new Exception("No such crypto on your wallet!");
+            }
+            var updated = jdbcTemplate.update(sql,id, transaction.getTitle(), transaction.getUserId(),
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
                     transaction.getAmountSold(), transaction.getPrice(), transaction.getDescription());
         } catch (Exception e){
@@ -89,17 +117,18 @@ public class TransactionRepository {
             var deleted = jdbcTemplate.update(sql, id);
         } catch (Exception e) {
             // Implement error handling to frontend
-
         }
     }
-    public Map<Integer, Double> getAmount(Integer userId){
+    public void addBalance(Transaction transaction) {
+        String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        var created = jdbcTemplate.update(sql, "Adding balance", transaction.getUserId(),
+                transaction.getCryptoIdBought(), 1, transaction.getAmountBought(),
+                0.0, 0.0, "Adding balance");
+    }
+    public Map<Integer, Double> getAmount(Integer userId){ // Amount in coins
         String sql = "SELECT * FROM \"Transactions\" WHERE userId = ?";
         Map<Integer, Double> amount = new HashMap<>();;
         List<Transaction> listOfTransactions = jdbcTemplate.query(sql, new TransactionMapper(), userId);
-
-        for (Transaction transaction : listOfTransactions) {
-            System.out.println(transaction.cryptoIdBought + " " + transaction.amountBought + " : " + transaction.cryptoIdSold + " " + transaction.amountSold);
-        }
 
         for (Transaction transaction : listOfTransactions) {
             Integer idbought = transaction.getCryptoIdBought();
@@ -120,23 +149,40 @@ public class TransactionRepository {
                 amount.put(idsold, -amountsold);
             }
         }
-        System.out.println(amount);
         return amount;
     }
-    public Map<Integer, Double> getBalance(Integer userId){
+    public Map<Integer, Double> getAmountExclude(Transaction transaction,Integer userId){
+        Map<Integer, Double> AmountExclude = getAmount(userId);
+        Integer idbought = transaction.getCryptoIdBought();
+        Double amountbought = transaction.getAmountBought();
+        Integer idsold = transaction.getCryptoIdSold();
+        Double amountsold = transaction.getAmountSold();
+        AmountExclude.replace(idbought, AmountExclude.get(idbought)-amountbought);
+        AmountExclude.replace(idsold, AmountExclude.get(idsold)+amountsold);
+        return AmountExclude;
+    }
+    public Double getNetworth(Integer userId) {
+        double balance = 0.0;
+        Map<Integer, Double> amount = getAmount(userId);
+        Map<String, Double> currentUSDTPrices = binanceCurrentPrice.currentUSDTPrices;
+        for (Map.Entry<Integer, Double> entry : amount.entrySet()) {
+            Integer id = entry.getKey();
+            Double amountCoins = entry.getValue();
+            balance += amountCoins * currentUSDTPrices.get(cryptoRepository.getById(id).getSymbol());
+        }
+        return balance;
+    }
+
+    public Map<Integer, Double> getBalance(Integer userId) {
         Map<Integer, Double> balance = new HashMap<>();
         Map<Integer, Double> amount = getAmount(userId);
         Map<String, Double> currentUSDTPrices = binanceCurrentPrice.currentUSDTPrices;
-
-
         for (Map.Entry<Integer, Double> entry : amount.entrySet()) {
             Integer id = entry.getKey();
-            Double amountBought = entry.getValue();
-            //TODO XXXX = crypto.IdToSymbol(id)
-            // currentUSDTPrices.get("XXXX")
-            balance.put(id, amountBought * currentUSDTPrices.get("ETH"));
+            Double amountCoins = entry.getValue();
+            balance.put(id, amountCoins * currentUSDTPrices.get(cryptoRepository.getById(id).getSymbol()));
         }
-        System.out.println(balance);
         return balance;
     }
+
 }
