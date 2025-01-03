@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class RegisterController {
@@ -23,7 +24,7 @@ public class RegisterController {
     }
 
     @PostMapping(value = "/register")
-    public String handleRegistration(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public String handleRegistration(@RequestParam("username") String username, @RequestParam("password") String password, HttpSession session) {
         if (userRepository.getByUsername(username).isPresent()) {
             return "Error";
         }
@@ -34,7 +35,7 @@ public class RegisterController {
         user.setCredit(20000d);
         System.out.println(user);
         userRepository.create(user);
-        return "redirect:/home";
+        return "redirect:/login";
     }
 
 

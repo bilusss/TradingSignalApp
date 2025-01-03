@@ -19,7 +19,7 @@ public class CryptoController {
         return cryptoRepository.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("id/{id}")
     Crypto getById(@PathVariable Integer id){
         Crypto crypto = cryptoRepository.getById(id);
         if (crypto == null){

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TradingSignal</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a style="padding-top:5px; padding-bottom:5px;" href="/home"><img src="/img/logo-navbar.png" width="65" height="50" alt="TradingSignalLogo"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0" >
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Vault</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Charts?</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Transactions</a>
+            </li>
+
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">@</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+
+<div id="Ticker">
+    <span style="margin-top: 30px; margin-bottom: 30px; text-align: center; " id="pair-interval"></span>
+    <span id="ticker-value">(0.00%)</span>
+</div>
+
+<div id="chart" style="width: 800px; height: 400px;"></div>
+
+<script th:inline="javascript">
+    const pair = /*[[${pair}]]*/ '';
+    const interval = /*[[${interval}]]*/ '';
+    const tick = /*[[${tick}]]*/ '';
+    const quotePrecision = /*[[${quotePrecision}]]*/ '';
+
+    // Setting start parameters
+    const pairIntervalElement = document.getElementById('pair-interval');
+    const tickerValueElement = document.getElementById('ticker-value');
+    pairIntervalElement.textContent = `${pair} on ${interval}:`;
+
+    function updateTickerDisplay(value) {
+        tickerValueElement.textContent = `(${value}%)`;
+        tickerValueElement.classList.remove('green', 'gray', 'red');
+
+        if (value > 0) {
+            tickerValueElement.classList.add('green');
+            tickerValueElement.textContent = `(+${value}%)`;
+        } else if (value == 0 || value == '0.00') {
+            tickerValueElement.classList.add('gray');
+        } else {
+            tickerValueElement.classList.add('red');
+        }
+    }
+
+    // https://github.com/tradingview/lightweight-charts
+    // https://tradingview.github.io/lightweight-charts/tutorials
+
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+        width: 800,
+        height: 400,
+        layout: {
+            background: { color: "#222" },
+            textColor: "#DDDDDD",
+        },
+        grid: {
+            vertLines: { color: "#444" },
+            horzLines: { color: "#444" },
+        },
+        rightPriceScale: {
+            borderVisible: false,
+        },
+        timeScale: {
+            rightOffset: 12,
+            barSpacing: 3,
+            timeVisible: true,
+            secondsVisible: false,
+            lockVisibleTimeRangeOnResize: true,
+            borderVisible: false,
+        },
+    });
+
+    // Candle configurate
+    function getPriceFormat(){
+        return { type: 'price', precision: calculatePrecision(tick), minMove: parseFloat(tick) };
+    }
+    function calculatePrecision(tickSize) {
+        if (!tickSize.includes('.')) {
+            return 0;
+        }
+        const decimalPart = tickSize.split('.')[1] || "";
+        const trimmedDecimalPart = decimalPart.replace(/0+$/, ''); // Ignoring 0 at the end "0.01000000"
+        return trimmedDecimalPart.length;
+    }
+    console.log(getPriceFormat())
+    const candleSeries = chart.addCandlestickSeries({
+        upColor: '#4caf50',// Bullish candles (up :D)
+        borderUpColor: '#4caf50',
+        wickUpColor: '#4caf50',
+        downColor: '#f44336', // Bearish candles (down :D)
+        borderDownColor: '#f44336',
+        wickDownColor: '#f44336',
+        priceFormat: getPriceFormat(),
+    });
+
+    // Adding historical data to chart
+    const historicalData = /*[[${historicalData}]]*/ [];
+    const formattedData = historicalData.map(entry => ({
+        time: Math.floor(entry[0] / 1000), // Convert time from milliseconds to seconds
+        open: parseFloat(entry[1]),
+        high: parseFloat(entry[2]),
+        low: parseFloat(entry[3]),
+        close: parseFloat(entry[4])
+    }));
+    candleSeries.setData(formattedData); // Setting data to candlestick chart
+
+    // WebSocket - Live data, handling "2 streams"
+    // Available interval: 1s 1m 3m 5m 15m 30m 1h 2h 4h 6h 8h 12h 1d 3d 1w 1M
+    const socket = new WebSocket(`wss://stream.binance.com:9443/ws/${pair.toLowerCase()}@ticker/${pair.toLowerCase()}@kline_${interval}`);
+
+    socket.onmessage = event => {
+        const message = JSON.parse(event.data);
+
+        // Handling new candles
+        if (message.e === 'kline') {
+            const newCandle = {
+                time: message.k.t / 1000, // Milisekundy na sekundy
+                open: parseFloat(message.k.o),
+                high: parseFloat(message.k.h),
+                low: parseFloat(message.k.l),
+                close: parseFloat(message.k.c),
+            };
+            candleSeries.update(newCandle);
+        }
+
+        // Handling new ticker
+        if (message.e === '24hrTicker') {
+            const priceChangePercent = parseFloat(message.P);
+            updateTickerDisplay(priceChangePercent.toFixed(2));
+        }
+    };
+
+    socket.onerror = error => {
+        console.error("WebSocket error:", error);
+        tickerValueElement.textContent = "Connection error!";
+    };
+    //TODO make this closing
+    socket.onclose = () => {
+        console.warn("WebSocket connection closed.");
+        tickerValueElement.textContent = "Connection closed.";
+    };
+</script>
+</body>
+</html>
