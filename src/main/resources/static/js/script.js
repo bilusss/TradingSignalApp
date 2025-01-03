@@ -99,7 +99,6 @@ async function manageTransactionForm() {
         showToast("Please fill out all fields.")
         return;
     }
-    console.log(cryptoBuyId)
     const data = {
         "cryptoIdSold": parseInt(cryptoSellId),
         "amountSold": parseFloat(amountSell),

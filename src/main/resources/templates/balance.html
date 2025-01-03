@@ -74,7 +74,6 @@
     window.onload = async function (){
         userAmount = await getAmount()
         userBalance = await getBalance()
-        console.log(userAmount, userBalance)
         for (const [id, amount] of Object.entries(userAmount)) {
             if (amount){
                 const crypto = await getCryptoById(id)
@@ -84,6 +83,10 @@
     }
     function createCard(currencyName, currencySymbol, amount, price){
         const container = document.querySelector('#card-container')
+        const tradeLink = currencySymbol === 'USDT'
+            ? `/chart/${currencySymbol}PLN`
+            : `/chart/${currencySymbol}USDT`;
+        const formattedPrice = price.toFixed(2);
         const cardHTML = `
         <div class="col-12 col-sm-6 col-md-3 mb-4">
             <div class="card bg-light text-primary">
@@ -91,10 +94,10 @@
                     <h5 class="card-title">${currencyName}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">${currencySymbol}</h6>
                     <div class="d-flex"><b><p class="card-text mr-2">AMOUNT: </p></b><p class="card-text">${amount}</p></div>
-                    <div class="d-flex"><b><p class="card-text mr-2">VALUE: </p></b><p class="card-text">${price}$</p></div>
+                    <div class="d-flex"><b><p class="card-text mr-2">VALUE: </p></b><p class="card-text">${formattedPrice}$</p></div>
                     <div class="my-2">
                         <a href="/wallet" class="card-link">Wallet</a>
-                        <a href="/trade/chart/${currencySymbol}" class="card-link">Trade</a>
+                        <a href="${tradeLink}" class="card-link">Trade</a>
                     </div>
                 </div>
             </div>
