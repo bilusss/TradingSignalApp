@@ -61,8 +61,8 @@
                     border: none;
                     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
                     width: 7vw;
-                    height: 4vw;
-                    font-size: 1vw;
+                    height: 48px;
+                    font-size: 18px;
                     transition: transform 0.2s, box-shadow 0.2s; /* Animation for hover effects */
                 }
                 .custom-button:hover {
@@ -107,10 +107,24 @@
                 <button type="button" class="btn custom-button mb-1 mx-1">1w</button>
                 <button type="button" class="btn custom-button mb-1 mx-1">1M</button>
             </div>
+            <script th:inline="javascript">
+                const buttons = document.querySelectorAll('.btn.custom-button');
+                const pair = /*[[${pair}]]*/ '';
+                buttons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const intervalButton = button.textContent.trim();
+                        const url = `http://localhost:8080/chart/${pair}/${intervalButton}`;
+                        closeSocket();
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 100);
+                    });
+                });
+            </script>
         </div>
 
         <script th:inline="javascript">
-            const pair = /*[[${pair}]]*/ '';
+            // const pair = /*[[${pair}]]*/ '';
             const interval = /*[[${interval}]]*/ '';
             const tick = /*[[${tick}]]*/ '';
             const quotePrecision = /*[[${quotePrecision}]]*/ '';
@@ -242,11 +256,16 @@
                 console.error("WebSocket error:", error);
                 tickerValueElement.textContent = "Connection error!";
             };
-            //TODO make this closing
             socket.onclose = () => {
                 console.warn("WebSocket connection closed.");
                 tickerValueElement.textContent = "Connection closed.";
             };
+            function closeSocket() {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.close();
+                    console.log("WebSocket closed.");
+                }
+            }
         </script>
     </div>
     </div>
