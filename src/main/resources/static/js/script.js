@@ -157,10 +157,25 @@ async function setTransactions(){
     for (var transaction of transactions){
         var myItem = document.createElement('tr')
         var columns = ['title','description','cryptoIdSold','amountSold','cryptoIdBought','amountBought']
-            for (var column of columns){
+            for (var column of columns) {
                 var col = document.createElement('td')
-                if (column === 'cryptoIdBought' || column === 'cryptoIdSold' ){
-                    const crypto = await getCryptoById(transaction[column])
+                if (column === 'amountSold' && transaction.description === "Adding balance"){
+                    col.innerHTML = ""
+                }else if (column === 'cryptoIdSold'){
+                    if (transaction.title === "Adding balance" && transaction.description === "Adding balance"){
+                        col.innerHTML = ""
+                    } else {
+                        let crypto = await getCryptoById(transaction[column])
+                        var img = document.createElement('img')
+                        img.setAttribute('src', crypto.logoUrl)
+                        img.setAttribute('class','crypto-image')
+                        var a = document.createElement('a')
+                        a.innerHTML = crypto.name.toUpperCase()
+                        col.appendChild(img)
+                        col.appendChild(a)
+                    }
+                }else if (column === 'cryptoIdBought' ){
+                    let crypto = await getCryptoById(transaction[column])
                     var img = document.createElement('img')
                     img.setAttribute('src', crypto.logoUrl)
                     img.setAttribute('class','crypto-image')
