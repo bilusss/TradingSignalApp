@@ -68,7 +68,6 @@
     const myList = document.querySelector("tbody")
     window.onload = async function (){
         const cryptoList = await getCrypto()
-        console.log(cryptoList)
         for (var crypto of cryptoList) {
             var myItem = document.createElement('tr')
             let button
