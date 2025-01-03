@@ -27,9 +27,6 @@ public class PagesController {
     @GetMapping(value = "/balance")
     public String getBalancePage() {return "balance";}
 
-    @GetMapping(value = "/wallet")
-    public String getWalletPage() {return "wallet";}
-
 }
 
 
