@@ -135,7 +135,7 @@ async function manageAddBalance() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ "cryptoIdBought": 1, "amountBought": 100}),
+            body: JSON.stringify({ "cryptoIdBought": 10, "amountBought": 1000}),
         });
 
         if (!response.ok) {
