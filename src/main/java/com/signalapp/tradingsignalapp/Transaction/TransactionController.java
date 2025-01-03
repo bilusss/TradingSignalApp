@@ -38,7 +38,13 @@ public class TransactionController {
         try {
             transactionRepository.create(transaction);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            if (e.getMessage().equals("No such crypto on your wallet!")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You don't have this cryptocurrency in your wallet.");
+            } else if (e.getMessage().equals("Insufficient funds!")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds!");
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred: " + e.getMessage());
+            }
         }
     }
     // put

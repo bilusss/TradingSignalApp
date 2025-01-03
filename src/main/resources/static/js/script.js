@@ -121,9 +121,18 @@ async function manageTransactionForm() {
     }
 
     if (response.ok) {
-        showToast("Success") // Response message can be changed
+        showToast("Transaction successful!");
     } else {
-        showToast("Error:" + response.statusText) // Response message can be changed
+        try {
+            const errorData = await response.json();
+            if (errorData && errorData.message) {
+                showToast("Error:" + errorData.message);
+            } else {
+                showToast("An unexpected error occurred.");
+            }
+        } catch (e) {
+            showToast("An unexpected error occurred while parsing the error response.");
+        }
     }
 }
 
