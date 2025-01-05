@@ -38,7 +38,9 @@ public class TransactionController {
         try {
             transactionRepository.create(transaction);
         } catch (Exception e) {
-            if (e.getMessage().equals("No such crypto on your wallet!")) {
+            if (e.getMessage().equals("Amount bought can't be negative") || e.getMessage().equals("Amount sold can't be negative")){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't add negative amount to the transaction");
+            }else if (e.getMessage().equals("No such crypto on your wallet!")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You don't have this cryptocurrency in your wallet.");
             } else if (e.getMessage().equals("Insufficient funds!")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds!");
