@@ -68,10 +68,16 @@ public class TransactionRepository {
         return jdbcTemplate.query(sql, new TransactionMapper(), id);
 
     }
-    public void create(Transaction transaction) {
+    public void create(Transaction transaction) throws Exception {
         String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             Map<Integer, Double> amount = getAmount(transaction.getUserId());
+            if (transaction.getAmountBought() < 0) {
+                throw new Exception("Amount bought can't be negative");
+            }
+            if (transaction.getAmountSold() < 0) {
+                throw new Exception("Amount sold can't be negative");
+            }
             if (amount.get(cryptoRepository.getById(transaction.getCryptoIdSold()).getId()) < transaction.getAmountSold()) {
                 throw new Exception("Insufficient funds!");
             } else if (amount.get(cryptoRepository.getById(transaction.getCryptoIdSold()).getId()) == null) {
@@ -81,6 +87,7 @@ public class TransactionRepository {
                     transaction.getCryptoIdBought(), transaction.getCryptoIdSold(), transaction.getAmountBought(),
                     transaction.getAmountSold(), transaction.getPrice(), transaction.getDescription());
         } catch (Exception e){
+            throw e;
             // Implement error handling to frontend
         }
     }
