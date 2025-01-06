@@ -42,7 +42,7 @@
     </div>
 </nav>
 <div class="mx-2 my-5" >
-    <h2 class="trade-heading pb-3">Check out yours balance</h2>
+    <h2 class="trade-heading pb-3">Your balance: <span id="networth-display">Loading...</span></h2>
     <div class="container">
         <div class="row" id="card-container">
             <!-- Cards will be added here -->
@@ -68,7 +68,25 @@
 <script src="/js/script.js"></script>
 <script>
     document.getElementById("addBalanceButton").addEventListener("click", manageAddBalance);
+
+    async function displayNetworth() {
+        try {
+            const networth = await getNetworth();
+            const networthDisplay = document.getElementById("networth-display");
+
+            if (!isNaN(networth)) {
+                networthDisplay.textContent = `${networth.toFixed(2)} USD`;
+            } else {
+                networthDisplay.textContent = "Error retrieving balance";
+            }
+        } catch (error) {
+            console.error("Failed to fetch networth:", error.message);
+            document.getElementById("networth-display").textContent = "Error retrieving balance";
+        }
+    }
+
     window.onload = async function (){
+        await displayNetworth();
         userAmount = await getAmount()
         userBalance = await getBalance()
         for (const [id, amount] of Object.entries(userAmount)) {

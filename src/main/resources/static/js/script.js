@@ -38,6 +38,16 @@ async function getBalance() {
     }
 }
 
+async function getNetworth() {
+    const url = "/session/getNetworth";
+    try {
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
 async function getAmount() {
     const url = "/session/getAmount";
     try {

@@ -80,6 +80,15 @@ public class SessionController {
         return transactionRepository.getBalance(userId);
     }
 
+    @GetMapping("/getNetworth")
+    Double getNetworth(HttpSession session){
+        Integer userId = getSession(session);
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged in");
+        }
+        return transactionRepository.getNetworth(userId);
+    }
+
     @GetMapping("/getTransactions")
     List<Transaction> getTransactions(HttpSession session){
         Integer userId = getSession(session);
