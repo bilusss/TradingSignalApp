@@ -143,7 +143,9 @@ async function manageAddBalance() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ "cryptoIdBought": 10, "amountBought": 1000}),
+            body: JSON.stringify({ "cryptoIdBought": 9, "amountBought": 1000}),
+            //TODO "cryptoIdBought": fixed ID isn't optimal to add USDT to balance
+            // as it can change when initializing DB from zero
         });
 
         if (!response.ok) {
