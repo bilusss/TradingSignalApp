@@ -25,7 +25,7 @@ public class BinanceAvailablePairs {
         Map<String, BinanceExchangeInfo.SymbolInfo> symbolMap = binanceExchangeInfo.getSymbolInfoMap();
 
         for (BinanceExchangeInfo.SymbolInfo symbolInfo : symbolMap.values()) {
-            if ("TRADING".equals(symbolInfo.getStatus())) {
+            if ("TRADING".equals(symbolInfo.getStatus()) && "USDT".equals(symbolInfo.getQuoteAsset())) {
                 availablePairs.add(symbolInfo.getSymbol());
             }
         }
