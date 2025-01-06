@@ -113,6 +113,7 @@ public class CryptoRepository {
         List<String> repeated = new ArrayList<>();
         List<String> noLink = new ArrayList<>();
         Map<String, BinanceExchangeInfo.SymbolInfo> symbolInfoMap = binanceExchangeInfo.getSymbolInfoMap();
+        System.out.println(symbolInfoMap);
         int total = symbolInfoMap.size();
         int count = 0;
         for (Map.Entry<String, BinanceExchangeInfo.SymbolInfo> entry : symbolInfoMap.entrySet()) {
@@ -124,6 +125,9 @@ public class CryptoRepository {
             String progressBar = "[" + "@".repeat(completed) + ".".repeat(progressBarWidth - completed) + "]";
             System.out.print("\r" + progressBar + " " + String.format("%.2f", progress) + "%");
             // Ifs
+            if (!"TRADING".equals(entry.getValue().getStatus())){
+                continue;
+            }
             if (entry.getValue().getBaseAsset().equals("USDT") && !usdtFlag || entry.getValue().getSymbol().equals("BULLUSDT") && entry.getValue().getStatus().equals("TRADING") || entry.getValue().getSymbol().equals("BEARUSDT") && entry.getValue().getStatus().equals("TRADING")) {
                 if (entry.getValue().getBaseAsset().equals("USDT")) {
                     usdtFlag = true;
