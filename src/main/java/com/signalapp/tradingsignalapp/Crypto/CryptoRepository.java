@@ -113,7 +113,6 @@ public class CryptoRepository {
         List<String> repeated = new ArrayList<>();
         List<String> noLink = new ArrayList<>();
         Map<String, BinanceExchangeInfo.SymbolInfo> symbolInfoMap = binanceExchangeInfo.getSymbolInfoMap();
-        System.out.println(symbolInfoMap);
         int total = symbolInfoMap.size();
         int count = 0;
         for (Map.Entry<String, BinanceExchangeInfo.SymbolInfo> entry : symbolInfoMap.entrySet()) {

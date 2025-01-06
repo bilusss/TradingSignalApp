@@ -48,7 +48,7 @@ public class BinanceExchangeInfo {
         double currentTime = System.currentTimeMillis();
 
         if (currentTime - lastFetchTime < DURATION_IN_MILLIS && !symbolMap.isEmpty()) {
-            System.out.println("Using cached exchange info");
+            log.info("Using cached exchange info");
             return;
         }
         log.info("Fetching exchange info");
