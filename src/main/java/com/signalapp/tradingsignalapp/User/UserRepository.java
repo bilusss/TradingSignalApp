@@ -25,7 +25,6 @@ public class UserRepository {
             user.setId(rs.getInt("id"));
             user.setUsername(rs.getString("username"));
             user.setHash(rs.getString("hash"));
-            user.setCredit(rs.getDouble("credit"));
             return user;
         }
     }
@@ -66,9 +65,9 @@ public class UserRepository {
         }
     }
     public void create(User user) {
-        String sql = "INSERT INTO \"User\"(username, hash, credit) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO \"User\"(username, hash) VALUES (?, ?)";
         try {
-            var created = jdbcTemplate.update( sql, user.getUsername(),user.getHash(),user.getCredit() );
+            var created = jdbcTemplate.update( sql, user.getUsername(),user.getHash());
 
         } catch (Exception e) {
             // Implement error handling to fronend
@@ -76,9 +75,9 @@ public class UserRepository {
         }
     }
     public void update(User user, Integer id) {
-        String sql = "UPDATE \"User\" SET username = ?, hash = ?, credit = ? WHERE id = ?";
+        String sql = "UPDATE \"User\" SET username = ?, hash = ? WHERE id = ?";
         try {
-            var updated = jdbcTemplate.update( sql, user.getUsername(),user.getHash(),user.getCredit(),id);
+            var updated = jdbcTemplate.update( sql, user.getUsername(),user.getHash(),id);
 
         } catch (Exception e) {
             // Implement error handling to fronend

@@ -4,14 +4,6 @@ CREATE TABLE IF NOT EXISTS "User" (
     hash varchar(250) NOT NULL
     );
 
-CREATE TABLE IF NOT EXISTS "Crypto" (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    symbol VARCHAR(50) NOT NULL,
-    description varchar(250) NOT NULL,
-    logourl varchar(250) NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS "Transactions" (
     id SERIAL PRIMARY KEY,
     title VARCHAR(50) NOT NULL,

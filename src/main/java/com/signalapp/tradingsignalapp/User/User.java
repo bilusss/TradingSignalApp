@@ -6,15 +6,11 @@ public class User {
     private Integer id;
     private String username;
     private String hash;
-    // Amount of money user has
-    private Double credit;
-
 
 //    public User(Integer id, String username, String hash, Double credit) {
 //        this.id = id;
 //        this.username = username;
 //        this.hash = hash;
-//        this.credit = credit;
 //    }
     // TODO: find a way to make the constructor overload work - 'No primary or single unique constructor found'
     // Constructor overloaded with a default credit
@@ -22,7 +18,6 @@ public class User {
 //        this.id = id;
 //        this.username = username;
 //        this.hash = hash;
-//        this.credit = 0.0;
 //    }
 
 
@@ -55,20 +50,8 @@ public class User {
     public void setHash(String hash) {
         this.hash = hash;
     }
-    public Double getCredit() {
-        return this.credit;
-    }
-    public void setCredit(Double credit) {
-        this.credit = credit;
-    }
-    public void addCredit(Float money) {
-        this.credit += money;
-    }
-    public void subCredit(Float money) {
-        this.credit -= money;
-    }
     public String toString() {
-        return String.format("User[id=%d,username=%s,credit=%f]", this.id, this.username, this.credit);
+        return String.format("User[id=%d,username=%s]", this.id, this.username);
     }
 
 }
