@@ -1,6 +1,8 @@
 package com.signalapp.tradingsignalapp.Controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.signalapp.tradingsignalapp.Crypto.Crypto;
+import com.signalapp.tradingsignalapp.Crypto.CryptoRepository;
+import com.signalapp.tradingsignalapp.Service.BinanceCurrentPrice;
 import com.signalapp.tradingsignalapp.Transaction.Transaction;
 import com.signalapp.tradingsignalapp.Transaction.TransactionRepository;
 import jakarta.servlet.http.HttpSession;
@@ -17,9 +19,13 @@ import java.util.Map;
 public class SessionController {
 
     private final TransactionRepository transactionRepository;
+    private final BinanceCurrentPrice binanceCurrentPrice;
+    private final CryptoRepository cryptoRepository;
 
-    public SessionController(TransactionRepository transactionRepository) {
+    public SessionController(TransactionRepository transactionRepository, BinanceCurrentPrice binanceCurrentPrice, CryptoRepository cryptoRepository) {
         this.transactionRepository = transactionRepository;
+        this.binanceCurrentPrice = binanceCurrentPrice;
+        this.cryptoRepository = cryptoRepository;
     }
     @RequestMapping("/set")
     public void setSession(HttpSession session, @RequestBody JsonNode json){
@@ -108,9 +114,13 @@ public class SessionController {
         transaction.setCryptoIdSold(json.get("cryptoIdSold").asInt());
         transaction.setAmountBought(json.get("amountBought").asDouble());
         transaction.setCryptoIdBought(json.get("cryptoIdBought").asInt());
-        if (transaction.getCryptoIdSold() == 9 && transaction.getAmountSold() != 0) {
-            transaction.setPrice(transaction.getAmountBought() / transaction.getAmountSold());
-        }else if (transaction.getAmountBought() != 0){
+        if (transaction.getCryptoIdSold() == 9 && transaction.getAmountBought() != 0) {
+            transaction.setPrice(transaction.getAmountSold() / transaction.getAmountBought());
+        } else if (transaction.getCryptoIdSold() != 9 && transaction.getAmountBought() != 0) {
+//            Map<String, Double> currentUSDTPrices = binanceCurrentPrice.currentUSDTPrices;
+//            Double sold = currentUSDTPrices.get(cryptoRepository.getById(transaction.getCryptoIdSold()).getSymbol());
+//            Double bought = currentUSDTPrices.get(cryptoRepository.getById(transaction.getCryptoIdBought()).getSymbol());
+//            transaction.setPrice(sold / bought);
             transaction.setPrice(transaction.getAmountSold() / transaction.getAmountBought());
         }else {
             transaction.setPrice(0d);
