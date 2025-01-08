@@ -108,8 +108,13 @@ public class SessionController {
         transaction.setCryptoIdSold(json.get("cryptoIdSold").asInt());
         transaction.setAmountBought(json.get("amountBought").asDouble());
         transaction.setCryptoIdBought(json.get("cryptoIdBought").asInt());
-
-        transaction.setPrice(20d); // TODO
+        if (transaction.getCryptoIdSold() == 9 && transaction.getAmountSold() != 0) {
+            transaction.setPrice(transaction.getAmountBought() / transaction.getAmountSold());
+        }else if (transaction.getAmountBought() != 0){
+            transaction.setPrice(transaction.getAmountSold() / transaction.getAmountBought());
+        }else {
+            transaction.setPrice(0d);
+        }
 
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not logged in");
