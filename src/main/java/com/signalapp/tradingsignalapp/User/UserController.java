@@ -28,7 +28,7 @@ public class UserController {
         return user.get();
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/name/{username}")
     User getByUsername(@PathVariable String username){
         Optional <User> user = userRepository.getByUsername(username);
         if (user.isEmpty()){
