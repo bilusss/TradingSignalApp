@@ -60,12 +60,12 @@ public class UserRepository {
     }
 
     public void create(User user) {
-        String sql = "INSERT INTO \"User\"(username, hash, credit) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO \"User\"(username, hash) VALUES (?, ?)";
         jdbcTemplate.update( sql, user.getUsername(),user.getHash() );
     }
 
     public void update(User user, Integer id) {
-        String sql = "UPDATE \"User\" SET username = ?, hash = ?, credit = ? WHERE id = ?";
+        String sql = "UPDATE \"User\" SET username = ?, hash = ? WHERE id = ?";
         var rows_updated = jdbcTemplate.update( sql, user.getUsername(),user.getHash(),id);
         if (rows_updated == 0) {
             throw new EmptyResultDataAccessException("User with id " + id + " not found.", 1);

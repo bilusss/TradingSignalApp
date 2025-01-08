@@ -32,7 +32,6 @@ public class RegisterController {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        System.out.println(user);
         userRepository.create(user);
         return "redirect:/login";
     }
