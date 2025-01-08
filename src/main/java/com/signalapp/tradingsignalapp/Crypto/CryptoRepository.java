@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-// So basically I wanted to move the db management away from Controllers
-// It would be too much code there, so Repository manages the SELECTS etc
 @Repository
 public class CryptoRepository {
 
@@ -43,14 +40,13 @@ public class CryptoRepository {
         }
     }
 
-
     public CryptoRepository(JdbcTemplate jdbcTemplate, BinanceExchangeInfo binanceExchangeInfo) {
         this.jdbcTemplate = jdbcTemplate;
         this.binanceExchangeInfo = binanceExchangeInfo;
     }
 
-    public List<Crypto> getAll() {
-        String sql = "select * from \"Crypto\" ORDER BY id ASC";
+    public List <Crypto> getAll() {
+        String sql = "SELECT * FROM \"Crypto\" ORDER BY id ASC";
         return jdbcTemplate.query(sql, new CryptoMapper());
     }
 
@@ -59,7 +55,7 @@ public class CryptoRepository {
         String sql = "SELECT * FROM \"Crypto\" WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new CryptoMapper(), id);
-        } catch (Exception e) {
+        } catch (EmptyResultDataAccessException e) {
             // If no result is found, return None
             return null;
         }
@@ -69,7 +65,7 @@ public class CryptoRepository {
         String sql = "SELECT * FROM \"Crypto\" WHERE symbol = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new CryptoMapper(), symbol);
-        } catch (Exception e) {
+        } catch (EmptyResultDataAccessException e) {
             // If no result is found, return None
             return null;
         }
@@ -82,14 +78,16 @@ public class CryptoRepository {
 
     public void update(Crypto crypto, Integer id) {
         String sql = "UPDATE \"Crypto\" SET name = ?, symbol = ?, description = ?, logoUrl = ? WHERE id = ?";
-        jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl(), id);
-
+        var rows_updated = jdbcTemplate.update(sql, crypto.getName(), crypto.getSymbol(), crypto.getDescription(), crypto.getLogoUrl(), id);
+        if (rows_updated == 0) {
+            throw new EmptyResultDataAccessException("Crypto with id " + id + " not found.", 1);
+        }
     }
 
     public void delete(Integer id) {
         String sql = "DELETE FROM \"Crypto\" WHERE id = ?";
-        var deleted = jdbcTemplate.update(sql, id);
-        if (deleted == 0) {
+        var rows_deleted = jdbcTemplate.update(sql, id);
+        if (rows_deleted == 0) {
             throw new EmptyResultDataAccessException("Crypto with id " + id + " not found.", 1);
         }
     }

@@ -1,5 +1,6 @@
 package com.signalapp.tradingsignalapp.User;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -37,23 +38,36 @@ public class UserController {
         return user.get();
     }
 
-    // post
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     void create(@RequestBody User user){
-        userRepository.create(user);
+        try {
+            userRepository.create(user);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
-    // put
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
     void update(@RequestBody User user, @PathVariable Integer id){
-        userRepository.update(user, id);
+        try {
+            userRepository.update(user, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
-    // delete
     @DeleteMapping("/{id}")
     void delete(@PathVariable Integer id){
-        userRepository.delete(id);
+        try {
+            userRepository.delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }

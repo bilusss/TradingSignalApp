@@ -28,17 +28,18 @@
             <li class="nav-item active">
                 <a class="nav-link active" href="/balance">Balance</a>
             </li>
-            <button class="btn btn-outline-success" id = "addBalanceButton" type="button">Add Balance</button>
+            <button class="btn btn-outline-success mx-2" id = "addBalanceButton" type="button">Add Balance</button>
 
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <form class="form-inline my-2 my-lg-0" onsubmit="crypto_search(event)">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">@</span>
                 </div>
-                <input type="text" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
+                <input type="text" id="cryptoInput" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
             </div>
         </form>
+        <a href="/logout" th:if="${userId}"><button type="button" class="ml-2 btn btn-outline-success" >Logout</button></a>
     </div>
 </nav>
 <div class="mx-2 my-5" >
@@ -85,40 +86,7 @@
         }
     }
 
-    window.onload = async function (){
-        await displayNetworth();
-        userAmount = await getAmount()
-        userBalance = await getBalance()
-        for (const [id, amount] of Object.entries(userAmount)) {
-            if (amount){
-                const crypto = await getCryptoById(id)
-                createCard(crypto.name, crypto.symbol, amount, userBalance[id])
-            }
-        }
-    }
-    function createCard(currencyName, currencySymbol, amount, price){
-        const container = document.querySelector('#card-container')
-        const tradeLink = currencySymbol === 'USDT'
-            ? `/chart/${currencySymbol}PLN`
-            : `/chart/${currencySymbol}USDT`;
-        const formattedPrice = price.toFixed(2);
-        const cardHTML = `
-        <div class="col-12 col-sm-6 col-md-3 mb-4">
-            <div class="card bg-light text-primary">
-                <div class="card-body">
-                    <h5 class="card-title">${currencyName}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">${currencySymbol}</h6>
-                    <div class="d-flex"><b><p class="card-text mr-2">AMOUNT: </p></b><p class="card-text">${amount}</p></div>
-                    <div class="d-flex"><b><p class="card-text mr-2">VALUE: </p></b><p class="card-text">${formattedPrice}$</p></div>
-                    <div class="my-2">
-                        <a href="${tradeLink}" class="card-link">Trade</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-        container.innerHTML += cardHTML;
-    }
+    window.onload = setBalance()
 </script>
 </body>
 </html>

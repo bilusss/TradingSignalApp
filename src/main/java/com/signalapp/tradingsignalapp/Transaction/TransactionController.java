@@ -14,7 +14,7 @@ import java.util.Optional;
 public class TransactionController {
     private final TransactionRepository transactionRepository;
 
-    // It's the best practise, using new Repo may cause performance issues
+    // initializing new Repo object may cause performance issues
     public TransactionController(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
@@ -31,7 +31,7 @@ public class TransactionController {
         }
         return transaction;
     }
-    // post
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     void create(@RequestBody Transaction transaction){
