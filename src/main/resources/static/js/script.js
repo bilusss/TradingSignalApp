@@ -9,6 +9,14 @@ function crypto_search(event) {
     }
 }
 
+function fill_register(event) {
+    event.preventDefault();
+    const query = document.getElementById('newsletterEmail').value;
+    window.location.href = `/register?email=${query}`;
+    // TODO add to mailing list in future
+
+}
+
 /**
  *
  * Code for fetching data from database

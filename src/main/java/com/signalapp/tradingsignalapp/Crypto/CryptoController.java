@@ -21,7 +21,13 @@ public class CryptoController {
 
     @GetMapping("id/{id}")
     Crypto getById(@PathVariable Integer id){
-        Crypto crypto = cryptoRepository.getById(id);
+        Crypto crypto;
+        try {
+            crypto = cryptoRepository.getById(id);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
         if (crypto == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -30,7 +36,13 @@ public class CryptoController {
 
     @GetMapping("/{symbol}")
     Crypto getBySymbol(@PathVariable String symbol){
-        Crypto crypto = cryptoRepository.getBySymbol(symbol);
+        Crypto crypto;
+        try {
+            crypto = cryptoRepository.getBySymbol(symbol);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+
         if (crypto == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

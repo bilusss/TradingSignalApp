@@ -4,6 +4,7 @@ import com.signalapp.tradingsignalapp.Crypto.CryptoRepository;
 import com.signalapp.tradingsignalapp.Service.BinanceCurrentPrice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -45,10 +46,6 @@ public class TransactionRepository {
         this.cryptoRepository = cryptoRepository;
     }
 
-    // Pretty simple we make SQL query using jbdc ( its like sql alchemy )
-    // We pass to the query, the sql string and Mapper
-    // The query returns ResultSet, but it needs to know how to change it to user
-    // That's why the mapper is used - simply instructions how to build user
     public List<Transaction> getAll() {
         String sql = "SELECT * FROM \"Transactions\" ORDER BY id ASC";
         return jdbcTemplate.query(sql, new TransactionMapper());
@@ -57,16 +54,14 @@ public class TransactionRepository {
     public Transaction getById(int id) {
         String sql = "SELECT * FROM \"Transactions\" WHERE \"id\" = ?";
         try {
-            Transaction transaction = jdbcTemplate.queryForObject(sql, new TransactionMapper(), id);
-            return transaction;
-        } catch (Exception e) {
+            return jdbcTemplate.queryForObject(sql, new TransactionMapper(), id);
+        } catch (EmptyResultDataAccessException  e) {
             return null;
         }
     }
-    public List<Transaction> getByUserId(int id) {
+    public List <Transaction> getByUserId(int id) {
         String sql = "SELECT * FROM \"Transactions\" WHERE \"userid\" = ?";
         return jdbcTemplate.query(sql, new TransactionMapper(), id);
-
     }
     public void create(Transaction transaction) throws Exception {
         String sql = "INSERT INTO \"Transactions\"(title, userid, cryptoidbought, cryptoidsold, amountbought, amountsold, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

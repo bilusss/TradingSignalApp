@@ -3,6 +3,7 @@
 <head>
     <title>TradingSignal</title>
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
@@ -14,9 +15,9 @@
         </div>
         <div class="col">
             <div class="d-flex justify-content-center p-3">
-                <h2 class = "text-primary"> Register </h2>
+                <h2 class = "small-heading"> Register </h2>
             </div>
-            <form action="/register" method="post">
+            <form action="/register"  class="login-form" method="post">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" class="form-control" id="username" name="username"  placeholder="Enter username">
@@ -26,7 +27,7 @@
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-primary w-100 ">Register</button>
+                    <button type="submit" class="btn btn-success  w-100 ">Register</button>
                 </div>
             </form>
         </div>
@@ -35,6 +36,16 @@
 </div>
 
 
+<script>
+    window.onload = function() {
+        // Retrieve the email from the URL query string (e.g., /register?email=user@example.com)
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
 
+        if (email) {
+            document.getElementById('username').value = email; // Fill email field with the passed email
+        }
+    };
+</script>
 </body>
 </html>

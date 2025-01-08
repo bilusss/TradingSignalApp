@@ -37,6 +37,7 @@
         <input type="text" id="cryptoInput" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
       </div>
     </form>
+    <a href="/logout" th:if="${userId}"><button type="button" class="ml-2 btn btn-outline-success" >Logout</button></a>
   </div>
 </nav>
 
@@ -47,7 +48,7 @@
         <h1 class="title-heading py-4"> Your future <br> begins here</h1>
       </div>
       <div class="container">
-        <form class="row g-3">
+        <form class="row g-3" onsubmit="fill_register(event)">
           <div class="col-7">
             <input type="email" class="form-control" id="newsletterEmail" placeholder="Email">
           </div>
