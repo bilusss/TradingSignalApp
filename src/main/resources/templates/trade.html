@@ -29,14 +29,15 @@
             </li>
 
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+        <form class="form-inline my-2 my-lg-0" onsubmit="crypto_search(event)">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">@</span>
                 </div>
-                <input type="text" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
+                <input type="text" id="cryptoInput" class="form-control" placeholder="Crypto" aria-label="Crypto" aria-describedby="basic-addon1">
             </div>
         </form>
+        <a href="/logout" th:if="${userId}"><button type="button" class="ml-2 btn btn-outline-success" >Logout</button></a>
     </div>
 
 </nav>
@@ -62,37 +63,7 @@
 
 <script src="/js/script.js"></script>
 <script>
-    const myList = document.querySelector("tbody")
-    window.onload = async function (){
-        const cryptoList = await getCrypto()
-        for (var crypto of cryptoList) {
-            var myItem = document.createElement('tr')
-            let button
-            if (crypto.symbol === "USDT") {
-                button = `<td><a href="/chart/USDTPLN"><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></a></td>`
-            } else {
-                button = `<td><a href="/chart/${crypto['symbol']}USDT"><button class="btn btn-outline-success btn-sm btn-block">Buy/sell</button></a></td>`
-            }
-            var columns = ['name','symbol','description']
-            for (var column of columns){
-                var col = document.createElement('td')
-                if (column === 'name'){
-                    var img = document.createElement('img')
-                    img.setAttribute('src', crypto.logoUrl)
-                    img.setAttribute('class','crypto-image')
-                    var a = document.createElement('a')
-                    a.innerHTML = crypto[column].toUpperCase()
-                    col.appendChild(img)
-                    col.appendChild(a)
-                }else{
-                    col.innerHTML = crypto[column]
-                }
-                myItem.appendChild(col)
-            }
-            myItem.innerHTML+=button
-            myList.appendChild(myItem)
-        }
-    }
+    window.onload = setTrade()
 </script>
 </body>
 </html>

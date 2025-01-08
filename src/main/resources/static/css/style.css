@@ -4,12 +4,25 @@
 body {
     background-color: #181a20!important;
 }
+input:focus, textarea:focus, select:focus {
+    outline: none; /* Removes default focus outline */
+    box-shadow: 0 0 5px 2px #38B261 !important; /* Creates the glowing effect */
+}
+
+
 .title-heading {
     font-size: 5rem;
     font-family: "Ubuntu", serif;
     font-weight: 700;
     font-style: normal;
     color:#38B261;
+}
+.small-heading{
+    font-size: 3rem;
+    font-weight: 700;
+    font-style: normal;
+    color:#38B261;
+
 }
 .trade-heading{
     /*font-size: 2rem;*/
@@ -18,19 +31,109 @@ body {
     font-style: normal;
     color:#38B261;
 }
-.form-control:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-}
+
 
 .table {
     color: #d4d4d4;
+}
+.login-form{
+    color: #bfc3c5;
+}
+.login-form input{
+    color:#bfc3c5 !important;
+    margin-bottom: 20px;
+    border-color: #bfc3c5;
+    background-color: #181a20 ;
+}
 
+.login-form input:focus,
+.login-form input:hover {
+    color: #bfc3c;
+    margin-bottom: 20px;
+    border-color: #bfc3c5;
+    background-color: #181a20 ;
 }
+input:not(:placeholder-shown), textarea:not(:placeholder-shown),
+input::selection, textarea::selection{
+    background-color: #181a20 ;
+}
+
+
+
+
+/* CSS for CHART.html  */
 .buy-container{
-    background-color: #0B0E11;
-    border-radius: 7px;
+    color:white;
+
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
 }
+.buy-container h2 {
+    color: rgb(56, 178, 97);
+    font-weight: 900;
+}
+form.buy-form textarea,
+form.buy-form input {
+    margin-bottom: 20px;
+    border-color: #495057;
+    color: #dee2e6;
+    background-color: #181a20 ;
+}
+form.buy-form textarea::placeholder,
+form.buy-form input::placeholder {
+    color: #dee2e6;
+}
+.form-control{
+    padding-bottom: 20px;
+}
+
+.buy-form input:focus,
+.buy-form input:hover {
+    color: #dee2e6;
+    border-color: #495057;
+    background-color: #181a20;
+}
+.buy-form textarea:focus,
+.buy-form textarea:hover {
+    color: #dee2e6;
+    border-color: #495057;
+    background-color: #181a20;
+}
+
+#Ticker {
+    color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    transition: color 0.5s ease-in-out; /* Smooth color transition */
+}
+#Intervals {
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+}
+#Intervals .custom-button {
+     background-color: #181a20;
+     color: white !important;
+     border: none;
+     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+     width: 7vw;
+     height: 48px;
+     font-size: 18px;
+     transition: transform 0.2s, box-shadow 0.2s; /* Animation for hover effects */
+ }
+.custom-button:hover {
+    transform: scale(1.05); /* Slightly enlarges the button on hover */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+.custom-button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2); /* Reduces shadow when clicked */
+}
+
 
 .table th, .table td {
     vertical-align: middle;
@@ -44,29 +147,17 @@ body {
     margin-right: 8px;
 }
 
-h1, h2 {
-    color: #FFFFFF;
-}
-
 #chart {
     padding: 20px;
     margin: 20px auto;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.8);
     border-radius: 20px;
 }
+
 .errorImg-container{
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-#Ticker {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
-    font-weight: bold;
-    transition: color 0.5s ease-in-out; /* Smooth color transition */
 }
 
 .red {
@@ -79,9 +170,3 @@ h1, h2 {
     color: green;
 }
 
-#Intervals {
-    padding: 20px;
-    margin: 20px auto;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.8);
-    border-radius: 20px;
-}
