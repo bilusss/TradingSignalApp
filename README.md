@@ -40,7 +40,7 @@ API is being delivered by Binance Exchange.
 
 ✅ Make a README.md
 
-🔳 Finish the project 
+✅ Finish the project (for now)
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
