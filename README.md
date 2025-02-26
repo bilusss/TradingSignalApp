@@ -39,9 +39,8 @@ API is being delivered by Binance Exchange.
 
 ## Roadmap
 
-✅ Make a README.md
+------
 
-✅ Finish the project (for now)
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
