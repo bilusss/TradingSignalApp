@@ -6,7 +6,7 @@ Allows to add owned coins. You can view most the most popular pairs available in
 
 API is being delivered by Binance Exchange.
 
-<img src="https://cdn.icon-icons.com/icons2/3053/PNG/512/binance_macos_bigsur_icon_190342.png" alt="icon" width="32" height="32">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ77X4FYp3jzmci0xPYqYtHanYgYN4IY2Xvw&s" alt="icon" width="310" height="163">
 
 ## Authors
 
