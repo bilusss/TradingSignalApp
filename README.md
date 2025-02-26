@@ -1,9 +1,9 @@
 <p align="center">
-# TradingSignalApp
-![TradingViewAppLogo](src/main/resources/img/logo-removebg.png "TradingViewAppLogo")
+  # TradingSignalApp
+  ![TradingViewAppLogo](src/main/resources/img/logo-removebg.png "TradingViewAppLogo")
 
-This web application focus on tracking user's portfolio.
-Allows to add owned coins. You can view most the most popular pairs available in crypto.
+  This web application focus on tracking user's portfolio.
+  Allows to add owned coins. You can view most the most popular pairs available in crypto.
 
 API is being delivered by Binance Exchange.
 
