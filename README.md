@@ -1,4 +1,4 @@
-
+<p align="center">
 # TradingSignalApp
 ![TradingViewAppLogo](src/main/resources/img/logo-removebg.png "TradingViewAppLogo")
 
@@ -45,3 +45,4 @@ API is being delivered by Binance Exchange.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+</p>
