@@ -1,10 +1,13 @@
 
-# TradingSignalApp <img src="src/main/resources/img/logo-removebg.png" alt="icon" width="50" height="50">
+# TradingSignalApp
+![TradingViewAppLogo](src/main/resources/img/logo-removebg.png "TradingViewAppLogo")
 
 This web application focus on tracking user's portfolio.
 Allows to add owned coins. You can view most the most popular pairs available in crypto.
 
-API is being delivered by Binance Exchange. <img src="https://public.bnbstatic.com/20190405/eb2349c3-b2f8-4a93-a286-8f86a62ea9d8.png" alt="icon" width="50" height="50">
+API is being delivered by Binance Exchange.
+
+<img src="https://public.bnbstatic.com/20190405/eb2349c3-b2f8-4a93-a286-8f86a62ea9d8.png" alt="icon" width="50" height="50">
 
 ## Authors
 
