@@ -1,6 +1,6 @@
 
 # TradingSignalApp
-![TradingViewAppLogo](src/main/resources/img/logo-removebg.png "TradingViewAppLogo")
+<img src="src/main/resources/img/logo-removebg.png" width="200" height="200">
 
 This web application focus on tracking user's portfolio.
 Allows to add owned coins. You can view most the most popular pairs available in crypto.
