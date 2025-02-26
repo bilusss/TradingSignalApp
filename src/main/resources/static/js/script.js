@@ -182,7 +182,7 @@ async function setTransactions(){
     const myList = document.querySelector('tbody')
     for (var transaction of transactions){
         var myItem = document.createElement('tr')
-        var columns = ['title','description','cryptoIdSold','amountSold','cryptoIdBought','amountBought']
+        var columns = ['title','description','cryptoIdSold','amountSold','exchangeRate','cryptoIdBought','amountBought']
             for (var column of columns) {
                 var col = document.createElement('td')
                 if (column === 'amountSold' && transaction.description === "Adding balance"){
@@ -200,7 +200,7 @@ async function setTransactions(){
                         col.appendChild(img)
                         col.appendChild(a)
                     }
-                }else if (column === 'cryptoIdBought' ){
+                }else if (column === 'cryptoIdBought'){
                     let crypto = await getCryptoById(transaction[column])
                     var img = document.createElement('img')
                     img.setAttribute('src', crypto.logoUrl)
@@ -209,6 +209,40 @@ async function setTransactions(){
                     a.innerHTML = crypto.name.toUpperCase()
                     col.appendChild(img)
                     col.appendChild(a)
+                }else if (column === 'exchangeRate') {
+                    var exchangeRate = parseFloat(parseFloat(transaction["amountSold"]) / parseFloat(transaction["amountBought"]))
+                    exchangeRateString = String(exchangeRate.toPrecision(7))
+                    if (exchangeRate === 0){
+                        col.innerHTML = ""
+                    }else if (exchangeRateString.includes("e")){
+                        firstPart = exchangeRateString.substring(0, exchangeRateString.indexOf("e"))
+                        firstPart = firstPart.substring(0, 5)
+                        secondPart = exchangeRateString.substring(exchangeRateString.indexOf("e"), exchangeRateString.length)
+                        col.innerHTML = firstPart+secondPart
+                    }else if (exchangeRate < 0.001) {
+                        var count = 0
+                        var flag = true
+                        var rest = ""
+                        for (let i = 2; i < exchangeRateString.length; i++) {
+                            if (flag === true && exchangeRateString.charAt(i) === "0") {
+                                count++
+                            } else {
+                                flag = false
+                            }
+                            if (flag === false) {
+                                rest += exchangeRateString.charAt(i)
+                            }
+                        }
+                        if (count > 3) {
+                            var exchangeRateShorten = "0.(" + count + ")" + rest
+                            col.innerHTML = exchangeRateShorten.substring(0, 7)
+                        } else {
+                            var exchangeRateShorten = "0." + count * "0" + rest
+                            col.innerHTML = exchangeRateShorten.substring(0, 7)
+                        }
+                    }else{
+                        col.innerHTML = exchangeRateString.substring(0,8)
+                    }
                 }else{
                     col.innerHTML = transaction[column]
                 }
@@ -253,6 +287,7 @@ async function manageTransactionForm() {
         "amountSold": parseFloat(amountSell),
         "cryptoIdBought": parseInt(cryptoBuyId),
         "amountBought": parseFloat(amountBuy),
+        "echangeRate": parseFloat(amountSell/amountBuy),
         "title": title,
         "description": description
     };
