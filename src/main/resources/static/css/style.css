@@ -169,4 +169,9 @@ form.buy-form input::placeholder {
 .green {
     color: green;
 }
-
+.text-custom-green {
+    color: #38B261 !important;
+}
+.text-custom-dark-green {
+    color: #00802b !important;
+}
