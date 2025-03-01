@@ -167,13 +167,17 @@ function createBalanceCard(currencyName, currencySymbol, amount, price){
     container.innerHTML += cardHTML;
 }
 
-function addDatalist(datalist_id,cryptos){
-    datalist = document.getElementById(datalist_id)
-    for (var crypto of cryptos){
-        const option = document.createElement('option')
-        option.setAttribute('value', crypto.name)
-        option.setAttribute('crypto_id', crypto.id)
-        datalist.appendChild(option)
+function addDatalist(datalist_id, cryptos) {
+    const datalist = document.getElementById(datalist_id);
+    if (!datalist) {
+        return;
+    }
+
+    for (var crypto of cryptos) {
+        const option = document.createElement('option');
+        option.setAttribute('value', crypto.name);
+        option.setAttribute('crypto_id', crypto.id);
+        datalist.appendChild(option);
     }
 }
 
@@ -321,15 +325,27 @@ async function manageTransactionForm() {
 }
 
 async function manageAddBalance() {
+    const datalistAddInput = document.getElementById("datalistAddInput").value;
+    const selectedAddOption = Array.from(document.getElementById("datalistAdd").options).find(
+        (option) => option.value === datalistAddInput
+    );
+    const amountAdd = document.getElementById("amountBuy").value;
+    const cryptoAddId = selectedAddOption ? selectedAddOption.getAttribute("crypto_id") : null;
+    if (amountAdd<=0) {
+        showToast("Please insert position number.")
+        return;
+    }
+    if (!cryptoAddId || !amountAdd) {
+        showToast("Please fill out all fields.")
+        return;
+    }
     try {
         const response = await fetch("/session/addBalance", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ "cryptoIdBought": 9, "amountBought": 1000}),
-            //TODO "cryptoIdBought": fixed ID isn't optimal to add USDT to balance
-            // as it can change when initializing DB from zero
+            body: JSON.stringify({ "cryptoIdBought": parseInt(cryptoAddId), "amountBought": parseFloat(amountAdd)}),
         });
 
         if (!response.ok) {
@@ -339,7 +355,7 @@ async function manageAddBalance() {
             setTimeout(function(){
                 window.location.reload()
             },1500)
-            showToast(`Success, your money has been added`);
+            showToast(`Success, your coins have been added`);
         }
     } catch (error) {
         showToast(`Error: ${error.message || "An unexpected error occurred."}`);
@@ -406,3 +422,11 @@ function vmin(percent) {
 function vmax(percent) {
     return Math.max(vh(percent), vw(percent));
 }
+
+async function populateCryptoDatalist() {
+    const cryptos = await getCrypto();
+    addDatalist("datalistAdd", cryptos);
+    addDatalist("datalistBuy", cryptos);
+}
+
+document.addEventListener("DOMContentLoaded", populateCryptoDatalist);
