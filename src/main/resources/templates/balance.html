@@ -28,31 +28,32 @@
             <li class="nav-item active">
                 <a class="nav-link active" href="/balance">Balance</a>
             </li>
-<!--            <button class="btn btn-outline-success mx-2" id = "addBalanceButton" type="button">Add Balance</button>-->
-            <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Add Balance Custom</button>
+            <button type="button" class="btn btn-outline-success mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Add Balance</button>
+
+<!--////////////////////-->
 
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content">
+                    <div class="modal-content bg-dark text-custom-green">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Crypto adding</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form>
                                 <div class="mb-3">
-                                    <label for="recipient-name" class="col-form-label">Recipient:</label>
-                                    <input type="text" class="form-control" id="recipient-name">
+                                    <input class="form-control bg-dark text-custom-green" list="datalistAdd" id="datalistAddInput" placeholder="Select crypto">
+                                    <datalist id="datalistAdd">
+                                    </datalist>
+
                                 </div>
                                 <div class="mb-3">
-                                    <label for="message-text" class="col-form-label">Message:</label>
-                                    <textarea class="form-control" id="message-text"></textarea>
+                                    <input type="number" class="form-control bg-dark text-custom-green" id="amountBuy" placeholder="Amount">
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" id = "addBalanceButtonConfirm" class="btn btn-primary">Send message</button>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" id="addBalanceButtonConfirm" class="btn btn-outline-success w-100">Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -113,8 +114,7 @@
             document.getElementById("networth-display").textContent = "Error retrieving balance";
         }
     }
-
-    window.onload = setBalance()
+    window.onload = setBalance
 </script>
 </body>
 </html>
