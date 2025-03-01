@@ -142,20 +142,23 @@ async function setBalance(){
         }
     }
 }
-
+function roundToMillionth(value) {
+    return Math.round(value * 1000000) / 1000000;
+}
 function createBalanceCard(currencyName, currencySymbol, amount, price){
     const container = document.querySelector('#card-container')
     const tradeLink = currencySymbol === 'USDT'
         ? `/chart/${currencySymbol}PLN`
         : `/chart/${currencySymbol}USDT`;
     const formattedPrice = price.toFixed(2);
+    const formattedAmount = roundToMillionth(amount);
     const cardHTML = `
         <div class="col-12 col-sm-6 col-md-3 mb-4">
             <div class="card bg-dark text-custom-green">
                 <div class="card-body">
                     <h5 class="card-title">${currencyName}</h5>
                     <h6 class="card-subtitle mb-2 text-custom-dark-green">${currencySymbol}</h6>
-                    <div class="d-flex"><b><p class="card-text mr-2">AMOUNT: </p></b><p class="card-text text-white">${amount}</p></div>
+                    <div class="d-flex"><b><p class="card-text mr-2">AMOUNT: </p></b><p class="card-text text-white">${formattedAmount}</p></div>
                     <div class="d-flex"><b><p class="card-text mr-2">VALUE: </p></b><p class="card-tex text-white">${formattedPrice}$</p></div>
                     <div class="my-2">
                         <a href="${tradeLink}" class="card-link text-center text-custom-green" style="font-size: 1.2rem;">TRADE</a>
