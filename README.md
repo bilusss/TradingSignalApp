@@ -7,18 +7,18 @@ Allows to add owned coins. You can view most the most popular pairs available in
 
 API is being delivered by Binance Exchange.
 
-<img src="https://public.bnbstatic.com/20190405/eb2349c3-b2f8-4a93-a286-8f86a62ea9d8.png" alt="icon" width="50" height="50">
+<!--<img src="https://public.bnbstatic.com/20190405/eb2349c3-b2f8-4a93-a286-8f86a62ea9d8.png" alt="icon" width="50" height="50">-->
 
-## Authors
+## App show-off
 
-- [Łukasz Bilski @bilusss](https://github.com/bilusss)
-- [Antoni Pokrzywa @AntoniPokrzywa](https://github.com/AntoniPokrzywa)
+<video controls muted loading="lazy"> <source src="/Documentation/AppShowOff.mp4" type="video/mp4"> Video was not loaded correctly </video>
 
 
 ## Run Locally
 
 - Install [Docker App](https://www.docker.com/)
 
+- Run the Docker
 
 - Clone the project
 
@@ -26,21 +26,22 @@ API is being delivered by Binance Exchange.
   git clone https://github.com/bilusss/TradingSignalApp
 ```
 
-- Go to the project
+- Open the project throught IDE like Intellij
 
-```bash
+<!--```bash
   cd */TradingSignalApp
-```
-
-- Run the project throught IDE like Intellij
-
+```-->
+- Run the project
 
 - Enter the [localhost](http://localhost:8080/)
 
-## Roadmap
 
 ------
+## Authors
 
+- [Łukasz Bilski @bilusss](https://github.com/bilusss)
+- [Antoni Pokrzywa @AntoniPokrzywa](https://github.com/AntoniPokrzywa)
+  
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
