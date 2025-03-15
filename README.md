@@ -11,7 +11,7 @@ API is being delivered by Binance Exchange.
 
 ## App show-off
 
-<video controls muted loading="lazy"> <source src="/Documentation/AppShowOff.mp4" type="video/mp4"> Video was not loaded correctly </video>
+![App demo](./Documentation/AppShowOff.gif)
 
 
 ## Run Locally
